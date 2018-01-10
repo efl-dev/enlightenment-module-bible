@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Tageslosung
+Exec=@GADGET_DIR@/tageslosung
+Icon=error
