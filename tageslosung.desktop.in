@@ -3,3 +3,5 @@ Type=Application
 Name=Tageslosung
 Exec=@GADGET_DIR@/tageslosung
 Icon=error
+X-Gadget-Version=@VERSION@
+X-Gadget-Bugreport=https://www.enlightenment.org/contrib/report-bug
