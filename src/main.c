@@ -498,39 +498,39 @@ _set_text_timer(void *data)
    return ECORE_CALLBACK_RENEW;
 }
 
-/*
+
+static Eina_Bool
+_day_change(void *data)
+{
+	_xml_parse(data);
+	_set_text(data, NULL, NULL, NULL);
+
+   return ECORE_CALLBACK_CANCEL;
+}
+
+
 static void
 _check_day(void *data)
 {
     time_t t1, t2;
-    struct tm date1, date2;
-//     char msg[1024];
+    struct tm date2;
 
-    // Differenz in Tagen von heute bis Weihnachten bestimmen 
     time( &t1); // aktuelles Datum in Sekunden 
 
     // Konvertiere Sekunden nach struct tm 
     date2 = *localtime( &t1);
     // Überschreibe Tag und Monat 
+	 date2.tm_sec = 59;
 	 date2.tm_min = 59;
-    date2.tm_mday = 22;
     date2.tm_hour = 23;
-    date2.tm_mon = 12 - 1; // Dezember 
 
     // Konvertiere wieder von struct tm in Sekunden zurück 
     t2 = mktime( &date2);
-
-//     strftime( msg, sizeof(msg), "Heute ist der %d.%m.%Y.\n", localtime(&t1));
-//     printf( msg);
-    printf( "Es sind noch %3.0f SEC bis Weihnachten!\n",
-            difftime(t2, t1) );
-    // ein Tag = 24 Stunden je 60 Minuten je 60 Sekunden 
+	printf("Sek. bis morgen: %f", difftime(t2, t1));
 	
+	daytimer = ecore_timer_add(difftime(t2, t1), _day_change, data);
 	
-// 	daytimer = ecore_timer_add(difftime(t2, t1), _set_text, ly);
-	
-}*/
-
+}
 
 void
 delete_timer()
@@ -615,7 +615,7 @@ void remove_space(char *src)
 
 int
 _xml_parse(void *data)
-{  
+{
 	#define BUF 512
    char buf_time[255];
 //    char info[255];
@@ -845,7 +845,7 @@ int elm_main(int argc, char *argv[])
 	_xml_parse(ly);
 	
 	
-// 	_check_day(ly);
+	_check_day(ly);
 	_config_load(ly);							// load config data from eet to tmp vars
 	
 // 				Evas_Object *edje_obj = elm_layout_edje_get(ly);
@@ -873,6 +873,8 @@ int elm_main(int argc, char *argv[])
 		timer = ecore_timer_add(5 * 60, _set_text_timer, ly);
 	else
 		timer = ecore_timer_add(ci_switch_time * 60, _set_text_timer, ly);
+	
+	_save_eet();
 	
   //run app RUN!
   elm_run();

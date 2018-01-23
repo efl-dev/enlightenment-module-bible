@@ -46,6 +46,8 @@ char      *orient_helper;
 
 
 static    Ecore_Timer *timer = NULL;
+static    Ecore_Timer *daytimer = NULL;
+
 // static    Ecore_Timer *daytimer = NULL;
 
 int        id_num;
