@@ -270,6 +270,12 @@ _hoversel_selected_cb(void *data, Evas_Object *obj, void *event_info EINA_UNUSED
 	printf("HOVERSEL: %s\n", ci_translation);
 }
 
+static void
+_popup_focus_out(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, void *event_data EINA_UNUSED)
+{
+   evas_object_del(obj);
+}
+
 
 void
 _settings_1(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
@@ -799,8 +805,7 @@ _settings(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 //    evas_object_smart_callback_add(tg_theme, "changed", _tg_changed_cb, ic);
 //    evas_object_smart_callback_add(tg_theme, "changed", _config_save, mainbox);
 //    evas_object_smart_callback_add(tg_theme, "changed", _sl_font_changed, ly);
-	evas_object_smart_callback_add(cs, "changed", _colorselector_changed_cb, mainbox); 
-	
+	evas_object_smart_callback_add(cs, "changed", _colorselector_changed_cb, mainbox);
 	
    evas_object_data_set(mainbox, "win", win);
    evas_object_data_set(mainbox, "ly", ly);
@@ -808,6 +813,7 @@ _settings(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
    elm_object_content_set(popup, mainbox);
 	
 	evas_object_event_callback_add(popup, EVAS_CALLBACK_MOUSE_OUT, _config_save, mainbox);
+	evas_object_event_callback_add(popup, EVAS_CALLBACK_FOCUS_OUT, _popup_focus_out, NULL);
    evas_object_show(popup);
 }
 
