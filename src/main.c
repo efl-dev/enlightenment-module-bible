@@ -623,6 +623,7 @@ _xml_parse(void *data)
    char buffer[PATH_MAX];
    int d = 0;
    int x = 0;
+	char buf2[4096];
 		
 	Losungen *losungen_new;
 	
@@ -636,13 +637,23 @@ _xml_parse(void *data)
 	// get menu state
 	Evas_Object *edje_obj = elm_layout_edje_get(data);
 	
+
+   snprintf(buf2, sizeof(buf2), "%s/tageslosung/losungen.xml", efreet_config_home_get());
+	
    FILE *fp;
    // Datei oeffnen
-   fp = fopen("/home/simon/CODING/tageslosung2/losungen2018.xml", "r");
+   fp = fopen(buf2, "r");
 
    if(fp == NULL) 
    {
-        return 0;
+        edje_object_part_text_set(edje_obj, "losungstext", "Losungsdata not found. Please go to https://www.losungen.de/download/ and download the cvs file and put it as ~/.config/tageslosung/losungen.xml in your home<br> please set the 'end of file' to unix");
+        edje_object_part_text_set(edje_obj, "lehrtext", "Losungsdata not found. Please go to https://www.losungen.de/download/ and download the cvs file and put it as ~/.config/tageslosung/losungen.xml in your home<br> please set the 'end of file' to unix");
+		  
+		  snprintf(buffer, sizeof(buffer), "<Losungstext>Losungsdata not found. Please go to https://www.losungen.de/download/ and download the cvs file and put it as ~/.config/tageslosung/losungen.xml in your home<br> please set the 'end of file' to unix</Losungstext>");
+		  
+		  losungstext = strdup(buffer);
+        
+		  return 0;
    }
 
    while( fgets(puffer, BUF, fp) != NULL ) 
