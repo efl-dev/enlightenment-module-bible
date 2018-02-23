@@ -368,7 +368,7 @@ collections {
          }
          program {
             name: "click_popup";
-            signal: "mouse,down,1";
+            signal: "mouse,down,3";
             source: "klick";
             action: SIGNAL_EMIT "settings" "settings";
          }
