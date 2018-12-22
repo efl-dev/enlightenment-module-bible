@@ -366,12 +366,12 @@ collections {
             source: "klick";
             action: SIGNAL_EMIT "delete_popup" "delete_popup";
          }
-         program {
-            name: "click_popup";
-            signal: "mouse,down,3";
-            source: "klick";
-            action: SIGNAL_EMIT "settings" "settings";
-         }
+//          program {
+//             name: "click_popup";
+//             signal: "mouse,down,3";
+//             source: "klick";
+//             action: SIGNAL_EMIT "settings" "settings";
+//          }
          program {
             name: "mouse_in_online";
             signal: "mouse,in";
