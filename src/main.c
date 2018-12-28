@@ -653,10 +653,10 @@ _xml_parse(void *data)
 
    if(fp == NULL) 
    {
-        edje_object_part_text_set(edje_obj, "losungstext", "Losungsdata not found. Please go to https://www.losungen.de/download/ and download the xml file and put it as ~/.config/tageslosung/losungen.xml in your home<br> please set the 'end of file' to unix");
-        edje_object_part_text_set(edje_obj, "lehrtext", "Losungsdata not found. Please go to https://www.losungen.de/download/ and download the xml file and put it as ~/.config/tageslosung/losungen.xml in your home<br> please set the 'end of file' to unix");
+        edje_object_part_text_set(edje_obj, "losungstext", "Losungsdata not found. Please open the settings (right click) and download them");
+        edje_object_part_text_set(edje_obj, "lehrtext", "Losungsdata not found. Please open the settings (right click) and download them");
 		  
-		  snprintf(buffer, sizeof(buffer), "<Losungstext>Losungsdata not found. Please go to https://www.losungen.de/download/ and download the xml file and put it as ~/.config/tageslosung/losungen.xml in your home<br> please set the 'end of file' to unix</Losungstext>");
+		  snprintf(buffer, sizeof(buffer), "<Losungstext>Losungsdata not found. Please open the settings (right click) and download them</Losungstext>");
 		  
 		  losungstext = strdup(buffer);
         
