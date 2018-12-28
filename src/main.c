@@ -100,7 +100,7 @@ _read_eet()
         
     eet_init();
 
-   char buf[4096], buf2[4096];
+   char buf[4096], buf2[512];
 
    snprintf(buf2, sizeof(buf2), "%s/tageslosung", efreet_config_home_get());
    ecore_file_mkpath(buf2);
@@ -317,7 +317,7 @@ Eina_Bool _gadget_exit(void *data, int type, void *event_data)
 	_save_eet();
 		
 	} 
-
+		return EINA_TRUE;
 }
 
 
@@ -508,6 +508,20 @@ _day_change(void *data)
    return ECORE_CALLBACK_CANCEL;
 }
 
+static void
+_get_date()
+{
+	time_t t;
+	struct tm * ts;
+	t = time(NULL);
+	ts = localtime(&t);
+// 	printf("%d\n",ts->tm_year+1900);
+	snprintf(year, sizeof(year), "%d", ts->tm_year+1900);
+	snprintf(nextyear, sizeof(nextyear), "%d", ts->tm_year+1900+1);
+	
+	snprintf(today, sizeof(today), "%02d-%02d-%02d", ts->tm_year + 1900, ts->tm_mon +1 , ts->tm_mday);
+	
+}
 
 static void
 _check_day(void *data)
@@ -617,7 +631,7 @@ int
 _xml_parse(void *data)
 {
 	#define BUF 512
-   char buf_time[255];
+//    char buf_time[255];
 //    char info[255];
    char puffer[BUF];
    char buffer[PATH_MAX];
@@ -627,18 +641,11 @@ _xml_parse(void *data)
 		
 	Losungen *losungen_new;
 	
-	time_t now;
-	time(&now);
-	struct tm *myTm;
-	myTm = localtime(&now);
-	
-	snprintf(buf_time, sizeof(buf_time), "%02d-%02d-%02d", myTm->tm_year + 1900, myTm->tm_mon +1 , myTm->tm_mday);
-	
 	// get menu state
 	Evas_Object *edje_obj = elm_layout_edje_get(data);
 	
 
-   snprintf(buf2, sizeof(buf2), "%s/tageslosung/losungen.xml", efreet_config_home_get());
+   snprintf(buf2, sizeof(buf2), "%s/tageslosung/Losungen Free %s.xml", efreet_config_home_get(), year);
 	
    FILE *fp;
    // Datei oeffnen
@@ -646,10 +653,10 @@ _xml_parse(void *data)
 
    if(fp == NULL) 
    {
-        edje_object_part_text_set(edje_obj, "losungstext", "Losungsdata not found. Please go to https://www.losungen.de/download/ and download the cvs file and put it as ~/.config/tageslosung/losungen.xml in your home<br> please set the 'end of file' to unix");
-        edje_object_part_text_set(edje_obj, "lehrtext", "Losungsdata not found. Please go to https://www.losungen.de/download/ and download the cvs file and put it as ~/.config/tageslosung/losungen.xml in your home<br> please set the 'end of file' to unix");
+        edje_object_part_text_set(edje_obj, "losungstext", "Losungsdata not found. Please go to https://www.losungen.de/download/ and download the xml file and put it as ~/.config/tageslosung/losungen.xml in your home<br> please set the 'end of file' to unix");
+        edje_object_part_text_set(edje_obj, "lehrtext", "Losungsdata not found. Please go to https://www.losungen.de/download/ and download the xml file and put it as ~/.config/tageslosung/losungen.xml in your home<br> please set the 'end of file' to unix");
 		  
-		  snprintf(buffer, sizeof(buffer), "<Losungstext>Losungsdata not found. Please go to https://www.losungen.de/download/ and download the cvs file and put it as ~/.config/tageslosung/losungen.xml in your home<br> please set the 'end of file' to unix</Losungstext>");
+		  snprintf(buffer, sizeof(buffer), "<Losungstext>Losungsdata not found. Please go to https://www.losungen.de/download/ and download the xml file and put it as ~/.config/tageslosung/losungen.xml in your home<br> please set the 'end of file' to unix</Losungstext>");
 		  
 		  losungstext = strdup(buffer);
         
@@ -727,7 +734,7 @@ _xml_parse(void *data)
       EINA_LIST_FOREACH(losungen, l, list_data)
       {
 // 		printf("DATUM LISTE: '%s'\n", list_data->date);
-            if(strcmp(list_data->date, buf_time) == 0)
+            if(strcmp(list_data->date, today) == 0)
 				{
 					snprintf(buffer, sizeof(buffer), "<Losungstext>%s</Losungstext>", list_data->losungstext);
 				   losungstext = strdup(buffer);
@@ -852,6 +859,8 @@ int elm_main(int argc, char *argv[])
 //    evas_object_smart_callback_add(win, "gadget_removed", _delete_id, NULL);
 	ecore_event_handler_add(ECORE_EVENT_SIGNAL_USER, _gadget_exit, NULL);
 		
+	_get_date();
+	
 	if(eina_list_count(losungen) == 0)
 	_xml_parse(ly);
 	

@@ -40,20 +40,22 @@ char      *lehrtext;
 char      *lehrtextvers;
 char      *date;
 char      *translation;
+char		 year[512];
+char		 nextyear[512];
+char 		 today[512];
 
 char 		  *s;
 char      *orient_helper;
 
 
-static    Ecore_Timer *timer = NULL;
-static    Ecore_Timer *daytimer = NULL;
-
-// static    Ecore_Timer *daytimer = NULL;
+static    Ecore_Timer *timer;
+static    Ecore_Timer *daytimer;
 
 int        id_num;
 
 Evas_Object *win;
 Evas_Object *ly;
+Evas_Object *tb;
 
 int         ci_id;
 double      ci_font_size;

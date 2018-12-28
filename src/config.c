@@ -66,16 +66,16 @@ _config_save(void *data, Evas *e EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void
 	
 	printf("SAVE\n");
 		
-	Evas_Object *mainbox = data;
-   Evas_Object *check_popup = evas_object_data_get(mainbox, "check_popup");
-   Evas_Object *check_online = evas_object_data_get(mainbox, "check_online");
-   Evas_Object *check_switch = evas_object_data_get(mainbox, "check_switch");
-   Evas_Object *check_layout = evas_object_data_get(mainbox, "check_layout");
-//    Evas_Object *hoversel = evas_object_data_get(mainbox, "hoversel");
-   Evas_Object *sl_switch_time = evas_object_data_get(mainbox, "sl_switch_time");
-   Evas_Object *ly = evas_object_data_get(mainbox, "ly");
-   Evas_Object *sl_font = evas_object_data_get(mainbox, "sl_font");
-//    Evas_Object *tg_theme = evas_object_data_get(mainbox, "tg_theme");	
+	Evas_Object *tb = data;
+   Evas_Object *check_popup = evas_object_data_get(tb, "check_popup");
+   Evas_Object *check_online = evas_object_data_get(tb, "check_online");
+   Evas_Object *check_switch = evas_object_data_get(tb, "check_switch");
+   Evas_Object *check_layout = evas_object_data_get(tb, "check_layout");
+//    Evas_Object *hoversel = evas_object_data_get(tb, "hoversel");
+   Evas_Object *sl_switch_time = evas_object_data_get(tb, "sl_switch_time");
+   Evas_Object *ly = evas_object_data_get(tb, "ly");
+   Evas_Object *sl_font = evas_object_data_get(tb, "sl_font");
+//    Evas_Object *tg_theme = evas_object_data_get(tb, "tg_theme");	
 	
 	if(ci_switch == 1)
 		delete_timer();
@@ -177,9 +177,9 @@ unsigned int createHEX(int r, int g, int b, int a)
 static void
 _colorselector_changed_cb(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 {	
-	Evas_Object *mainbox = data;
-   Evas_Object *ic = evas_object_data_get(mainbox, "ic");
-   Evas_Object *ly = evas_object_data_get(mainbox, "ly");
+	Evas_Object *tb = data;
+   Evas_Object *ic = evas_object_data_get(tb, "ic");
+   Evas_Object *ly = evas_object_data_get(tb, "ly");
 
    elm_colorselector_color_get(obj, &ci_r, &ci_g, &ci_b, &ci_a);
 	
@@ -187,21 +187,20 @@ _colorselector_changed_cb(void *data, Evas_Object *obj, void *event_info EINA_UN
 	
 	set_color(ly);
 }
-
+/*
 static void
 _sl_font_changed_value(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
 	ci_font_size = elm_slider_value_get(obj);
-}
+}*/
 
 
 void
-_sl_font_changed(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+_sl_font_changed(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
-	Evas_Object *mainbox = data;
-//    Evas_Object *win = evas_object_data_get(mainbox, "win");
-   Evas_Object *ly = evas_object_data_get(mainbox, "ly");	
-	char buf[PATH_MAX];
+	Evas_Object *tb = data;
+	ci_font_size = elm_slider_value_get(obj);
+   Evas_Object *ly = evas_object_data_get(tb, "ly");
 	
    set_color(ly);
 }
@@ -212,7 +211,7 @@ _check_switch_changed(void *data, Evas_Object *obj, void *event_info EINA_UNUSED
 {
 	Evas_Object *sl = data;
    if(!elm_check_state_get(obj))
-   {		
+   {
 	   elm_object_disabled_set(sl, EINA_FALSE);
    }else
 	{		
@@ -223,23 +222,20 @@ _check_switch_changed(void *data, Evas_Object *obj, void *event_info EINA_UNUSED
 static void
 _check_layout_changed(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
-	Evas_Object *mainbox = data;
-   Evas_Object *win = evas_object_data_get(mainbox, "win");
-   Evas_Object *ly = evas_object_data_get(mainbox, "ly");
-// 	Evas_Object *edje_obj = elm_layout_edje_get(ly);
-	char buf[4096];
+	Evas_Object *tb = data;
+   Evas_Object *ly = evas_object_data_get(tb, "ly");
 	char buf1[4096];
 	
 	snprintf(buf1, sizeof(buf1), "%s/themes/tageslosung.edj", PACKAGE_DATA_DIR);
    
 	if(elm_check_state_get(obj))
    {		
-      evas_object_size_hint_aspect_set(win, EVAS_ASPECT_CONTROL_BOTH, 1, 1);
+//       evas_object_size_hint_aspect_set(win, EVAS_ASPECT_CONTROL_BOTH, 1, 1);
 		elm_layout_file_set(ly, buf1, "tageslosung2_small");
 		printf("check if\n");
    }else
 	{		
-      evas_object_size_hint_aspect_set(win, EVAS_ASPECT_CONTROL_BOTH, 10, 1);
+//       evas_object_size_hint_aspect_set(win, EVAS_ASPECT_CONTROL_BOTH, 10, 1);
 		elm_layout_file_set(ly, buf1, "tageslosung2");
 		printf("check else\n");
 	}
@@ -247,7 +243,7 @@ _check_layout_changed(void *data, Evas_Object *obj, void *event_info EINA_UNUSED
 	set_color(ly);
 }
 
-
+/*
 static void
 _check_bibelserver_changed(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
@@ -259,7 +255,7 @@ _check_bibelserver_changed(void *data, Evas_Object *obj, void *event_info EINA_U
 	{		
 	 elm_object_disabled_set(hoversel, EINA_TRUE);
 	}
-}
+}*/
 
 
 static void
@@ -297,243 +293,370 @@ _settings_2(void *data, Evas_Object *obj, const char *emission EINA_UNUSED, cons
 }
 
 
+static void
+_config_show_general(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+	Evas_Object *tb = data;
+	
+   Evas_Object *popup_frame = evas_object_data_get(tb, "popup_frame");
+	Evas_Object *advanced_frame = evas_object_data_get(tb, "advanced_frame");
+	Evas_Object *general_frame = evas_object_data_get(tb, "general_frame");
+	Evas_Object *calendar_frame = evas_object_data_get(tb, "calendar_frame");
+	Evas_Object *data_frame = evas_object_data_get(tb, "data_frame");
+	Evas_Object *help_frame = evas_object_data_get(tb, "help_frame");
+
+//    evas_object_hide();
+   evas_object_hide(popup_frame);
+   evas_object_hide(calendar_frame);
+   evas_object_hide(help_frame);
+   evas_object_hide(advanced_frame);
+   evas_object_hide(data_frame);
+   evas_object_show(general_frame);
+	printf("SHOW FEED\n");
+}
+
+
+static void
+_config_show_popup(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+	Evas_Object *tb = data;
+	
+   Evas_Object *popup_frame = evas_object_data_get(tb, "popup_frame");
+	Evas_Object *advanced_frame = evas_object_data_get(tb, "advanced_frame");
+	Evas_Object *general_frame = evas_object_data_get(tb, "general_frame");
+	Evas_Object *calendar_frame = evas_object_data_get(tb, "calendar_frame");
+	Evas_Object *data_frame = evas_object_data_get(tb, "data_frame");
+	Evas_Object *help_frame = evas_object_data_get(tb, "help_frame");
+//    evas_object_hide();
+   evas_object_hide(general_frame);
+   evas_object_hide(calendar_frame);
+   evas_object_hide(help_frame);
+   evas_object_hide(advanced_frame);
+   evas_object_hide(data_frame);
+   evas_object_show(popup_frame);
+	printf("SHOW POPUP\n");
+}
+
+
+static void
+_config_show_advanced(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+	Evas_Object *tb = data;
+	
+   Evas_Object *popup_frame = evas_object_data_get(tb, "popup_frame");
+	Evas_Object *advanced_frame = evas_object_data_get(tb, "advanced_frame");
+	Evas_Object *general_frame = evas_object_data_get(tb, "general_frame");
+	Evas_Object *calendar_frame = evas_object_data_get(tb, "calendar_frame");
+	Evas_Object *data_frame = evas_object_data_get(tb, "data_frame");
+	Evas_Object *help_frame = evas_object_data_get(tb, "help_frame");
+//    evas_object_hide();
+   evas_object_hide(general_frame);
+   evas_object_hide(calendar_frame);
+   evas_object_hide(help_frame);
+   evas_object_hide(popup_frame);
+   evas_object_hide(data_frame);
+   evas_object_show(advanced_frame);
+	printf("SHOW POPUP\n");
+}
+
+
+static void
+_config_show_calendar(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+	Evas_Object *tb = data;
+	
+   Evas_Object *popup_frame = evas_object_data_get(tb, "popup_frame");
+	Evas_Object *advanced_frame = evas_object_data_get(tb, "advanced_frame");
+	Evas_Object *general_frame = evas_object_data_get(tb, "general_frame");
+	Evas_Object *calendar_frame = evas_object_data_get(tb, "calendar_frame");
+	Evas_Object *data_frame = evas_object_data_get(tb, "data_frame");
+	Evas_Object *help_frame = evas_object_data_get(tb, "help_frame");
+	
+	
+//    evas_object_hide();
+   evas_object_hide(general_frame);
+   evas_object_hide(popup_frame);
+   evas_object_hide(help_frame);
+   evas_object_hide(advanced_frame);
+   evas_object_hide(data_frame);
+   evas_object_show(calendar_frame);
+	
+	printf("SHOW ADVANCED\n");
+}
+
+static void
+_config_show_data(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+	Evas_Object *tb = data;
+	
+   Evas_Object *popup_frame = evas_object_data_get(tb, "popup_frame");
+	Evas_Object *advanced_frame = evas_object_data_get(tb, "advanced_frame");
+	Evas_Object *general_frame = evas_object_data_get(tb, "general_frame");
+	Evas_Object *calendar_frame = evas_object_data_get(tb, "calendar_frame");
+	Evas_Object *data_frame = evas_object_data_get(tb, "data_frame");
+	Evas_Object *help_frame = evas_object_data_get(tb, "help_frame");
+	
+	
+//    evas_object_hide();
+   evas_object_hide(general_frame);
+   evas_object_hide(popup_frame);
+   evas_object_hide(help_frame);
+   evas_object_hide(advanced_frame);
+   evas_object_hide(calendar_frame);
+   evas_object_show(data_frame);
+	
+	printf("SHOW ADVANCED\n");
+}
+
+
+static void
+_config_show_help(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+{
+	Evas_Object *tb = data;
+	
+   Evas_Object *popup_frame = evas_object_data_get(tb, "popup_frame");
+	Evas_Object *advanced_frame = evas_object_data_get(tb, "advanced_frame");
+	Evas_Object *general_frame = evas_object_data_get(tb, "general_frame");
+	Evas_Object *calendar_frame = evas_object_data_get(tb, "calendar_frame");
+	Evas_Object *data_frame = evas_object_data_get(tb, "data_frame");
+	Evas_Object *help_frame = evas_object_data_get(tb, "help_frame");
+	
+   evas_object_hide(general_frame);
+   evas_object_hide(popup_frame);
+   evas_object_hide(calendar_frame);
+   evas_object_hide(advanced_frame);
+   evas_object_hide(data_frame);
+	evas_object_show(help_frame);
+	
+	printf("SHOW ADVANCED\n");
+}
+static void
+completion_cb(void *data, const char *file, int status)
+{
+	
+	Eina_List *completion_list = data;
+   Evas_Object *year_data = eina_list_nth(completion_list, 0);
+   Evas_Object *obj = eina_list_nth(completion_list, 1);
+	
+	if(status >= 200 && status <= 226)
+	{
+		elm_object_text_set(obj, "100%");
+		
+		//Unzip and rename
+		Ecore_Exe *exe;
+		char buf[4096];
+
+		snprintf(buf, sizeof(buf), "cd /home/simon/.config/tageslosung && unzip /home/simon/.config/tageslosung/Losung_%s_XML.zip", (char*)year_data);
+// 		snprintf(buf, sizeof(buf), "cd /home/simon/.config/tageslosung && unzip /home/simon/.config/tageslosung/Losung_2018_XML.zip  && tr '\n\r' '\n' <'Losungen Free 2018.xml' >losungen.xml");
+		exe = ecore_exe_run(buf, NULL);
+		if (exe > 0)
+		{
+			ecore_exe_free(exe);
+		}
+		
+	}
+	else
+		elm_object_text_set(obj, "Error downloading file");
+		
+}
+/*
+static int
+progress_cb(void *data, const char *file, long int dltotal, long int dlnow, long int ultotal, long int ulnow)
+{
+// 	Evas_Object *bt = data;
+// 	elm_object_text_set(bt, "...");
+}*/
+
+static void
+_download_data_cb(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
+{
+	char buf[512], cache_dir[4096], filename[512];
+
+	
+	
+	elm_object_text_set(obj, "download");
+
+	snprintf(cache_dir, sizeof(cache_dir), "%s/tageslosung/", efreet_config_home_get());
+	snprintf(filename, sizeof(filename), "%s/tageslosung/Losung_%s_XML.zip", efreet_config_home_get(), (char*)data);
+
+		ecore_file_recursive_rm(filename);
+		
+		if(!ecore_file_is_dir(cache_dir))
+		{
+			ecore_file_mkpath(cache_dir);
+			printf("MKDIR: %s\n", cache_dir);
+		}
+		
+// 		src_dest = "https://www.losungen.de/fileadmin/media-losungen/download/Losung_2019_XML.zip";
+		
+		snprintf(buf, sizeof(buf), "https://www.losungen.de/fileadmin/media-losungen/download/Losung_%s_XML.zip", (char*)data);
+// 		snprintf(buf1, sizeof(buf1), "%s/tageslosung/Losung_%s_XML.zip", efreet_config_home_get(), data);
+		Eina_List *completion_list = NULL;
+		completion_list = eina_list_append(completion_list, data);
+		completion_list = eina_list_append(completion_list, obj);
+		
+		ecore_file_download(buf, filename, completion_cb, NULL, completion_list, NULL);
+
+}
+
+
 
 void
 _settings(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
-{	
-	Evas_Object *popup, *lbl, *fr, *fr2, *fr3, *sl_switch_time, *sl_font, *cal, *boxv, *cs;
-   Evas_Object *o, *mainbox, *box_settings, *box_usage, *box_copyright, *check_switch;
-   Evas_Object *check_online, *check_popup, *check_layout, *fr1, *boxh, *hoversel, *box_history;
+{
+	char buf[PATH_MAX];
+// 	double step;
+	Evas_Object *popup_settings;
 	
-// 	Evas_Object *tg_theme;
-	Evas_Object *ic;
+	// General frame Objects
+	Evas_Object *general_frame;
+	Evas_Object *tb_general;
+	Evas_Object *check_online;
+	Evas_Object *hoversel;
+	Evas_Object *button;
+	Evas_Object *button1;
+	Evas_Object *check_switch;
+	Evas_Object *sl_switch_time;
+	Evas_Object *sl_font;
+	
+	// Popup frame Objects
+	Evas_Object *popup_frame;
+	Evas_Object *tb_popup;
+	Evas_Object *check_popup;
+	Evas_Object *check_layout;
+	
+	
+	// Advanced frame Objects
+	Evas_Object *tb_advanced;
+	Evas_Object *advanced_frame;
+	Evas_Object *cs;
+	
+	// Calendar frame Objects
+	Evas_Object *tb_calendar;
+	Evas_Object *calendar_frame;
+	Evas_Object *boxh;
+	Evas_Object *boxv;
+	
+	Evas_Object *cal;
+	
+	
+	// Data Management frame Objects
+	Evas_Object *tb_data;
+	Evas_Object *data_frame;
+
+	// Help frame Objects
+	Evas_Object *help_frame;
+	Evas_Object *tb_help;
+	
+	// Separator
+	Evas_Object *o;
+	
+	// Lable
+	Evas_Object *lbl;
+		
+	// List Objects
+	Elm_Object_Item *list;
+	Evas_Object *it;
+	
+	
 	Evas_Object *ly = obj;
 	Evas_Object *win = data;
-   char buf[PATH_MAX];
-
-		  
-   popup = elm_win_add(win, "win", ELM_WIN_BASIC);
-   elm_win_alpha_set(popup, 1);
-	
-   mainbox = elm_box_add(popup);
-	
-	
-   elm_box_horizontal_set(mainbox, EINA_FALSE);
-   E_EXPAND(mainbox);
-   E_ALIGN(mainbox, 0.0, 0.0);
-   evas_object_show(mainbox);
-	
-	
-   fr = elm_frame_add(mainbox);
-   elm_object_text_set(fr, "Tageslosung Settings");
-   E_EXPAND(fr);
-   E_ALIGN(fr, 0.5, 0.5);
-   E_FILL(fr);
-   evas_object_show(fr);
-
-   box_settings = elm_box_add(fr);
-   elm_box_horizontal_set(box_settings, EINA_FALSE);
-   E_EXPAND(box_settings);
-   evas_object_show(box_settings);
-	
-	
-   ic = elm_icon_add(box_settings);
-	snprintf(buf, sizeof(buf), "%s/images/module_icon1.png", PACKAGE_DATA_DIR);
-	elm_image_file_set(ic, buf, NULL);
-   evas_object_size_hint_weight_set(ic, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-   evas_object_size_hint_align_set(ic, EVAS_HINT_FILL, EVAS_HINT_FILL);
-   evas_object_size_hint_min_set(ic, 56, 56);
-	evas_object_color_set(ic, ci_r, ci_g, ci_b, ci_a);
-	elm_box_pack_end(box_settings, ic);
-
-   evas_object_data_set(mainbox, "ic", ic);
-   evas_object_show(ic);
-/*
-   tg_theme = elm_check_add(box_settings);
-   elm_object_style_set(tg_theme, "toggle");
-   elm_object_text_set(tg_theme, gettext("Theme: "));
-	elm_check_state_set(tg_theme, ci_theme);
-   elm_object_part_text_set(tg_theme, "on", gettext("Black"));
-   elm_object_part_text_set(tg_theme, "off", gettext("White"));
-   elm_box_pack_end(box_settings, tg_theme);
-   evas_object_show(tg_theme);
-	evas_object_data_set(mainbox, "tg_theme", tg_theme);
-	
-	
-	o = elm_separator_add(box_settings);
-   elm_separator_horizontal_set(o, EINA_TRUE);
-   elm_box_pack_end(box_settings, o);
-   evas_object_show(o);
-	
-	*/
-	
-	cs = elm_colorselector_add(box_settings);
-   evas_object_size_hint_weight_set(cs, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(cs, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    
-	elm_colorselector_mode_set(cs, ELM_COLORSELECTOR_BOTH);
-	elm_colorselector_palette_name_set(cs, "tageslosung");
-	elm_colorselector_palette_color_add(cs, 253, 232, 82, 255);
-   elm_colorselector_palette_color_add(cs, 255, 186, 0, 255);
-   elm_colorselector_palette_color_add(cs, 223, 147, 37, 255);
-   elm_colorselector_palette_color_add(cs, 238, 119, 99, 255);
-   elm_colorselector_palette_color_add(cs, 164, 182, 166, 255);
-   elm_colorselector_palette_color_add(cs, 146, 175, 29, 255);
-   elm_colorselector_palette_color_add(cs, 41, 68, 59, 255);
-   elm_colorselector_palette_color_add(cs, 0, 109, 128, 255);
-   elm_colorselector_palette_color_add(cs, 11, 54, 71, 255);
-   elm_colorselector_palette_color_add(cs, 41, 46, 68, 255);
-   elm_colorselector_palette_color_add(cs, 116, 13, 14, 255);
-   elm_colorselector_palette_color_add(cs, 101, 33, 44, 255);
-   elm_colorselector_palette_color_add(cs, 132, 50, 118, 255);
-   elm_colorselector_palette_color_add(cs, 68, 40, 55, 255);
-   elm_colorselector_palette_color_add(cs, 63, 37, 60, 255);
-   elm_colorselector_palette_color_add(cs, 115, 87, 63, 255);
-   elm_colorselector_palette_color_add(cs, 66, 70, 73, 255);
-   elm_colorselector_palette_color_add(cs, 255, 255, 255, 255);
-   elm_colorselector_palette_color_add(cs, 0, 0, 0, 255);
-   elm_box_pack_end(box_settings, cs);
-   evas_object_show(cs);
-	evas_object_data_set(mainbox, "cs", cs);
-	
-	
-	o = elm_separator_add(box_settings);
-   elm_separator_horizontal_set(o, EINA_TRUE);
-   elm_box_pack_end(box_settings, o);
-   evas_object_show(o);
-	
-	check_layout = elm_check_add(box_settings);
-	elm_object_text_set(check_layout, "Hide Text");
-   elm_check_state_set(check_layout, ci_layout);
-   E_ALIGN(check_layout, 0.0, 0.0);
- 	E_WEIGHT(check_layout, EVAS_HINT_EXPAND, 0);
-//    evas_object_smart_callback_add(check_layout, "changed", _check_changed, inst);
-	elm_box_pack_end(box_settings, check_layout);
-	evas_object_show(check_layout);
-   evas_object_data_set(mainbox, "check_layout", check_layout);
-	
 	
 
-	o = elm_separator_add(box_settings);
-   elm_separator_horizontal_set(o, EINA_TRUE);
-   elm_box_pack_end(box_settings, o);
-   evas_object_show(o);
+	
+   popup_settings = elm_win_add(win, "win", ELM_WIN_BASIC);
+   elm_win_alpha_set(popup_settings, 1);
+	
+	tb = elm_table_add(popup_settings);
+	evas_object_size_hint_weight_set(tb, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_size_hint_align_set(tb, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_show(tb);
+	
+	lbl = elm_label_add(tb);
+   evas_object_size_hint_weight_set(lbl, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+   evas_object_size_hint_align_set(lbl, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   elm_object_style_set(lbl, "marker");
+   elm_object_text_set(lbl, "<b>Tageslosung Configuration</b>");
+   elm_table_pack(tb, lbl, 0, 0, 2, 1);
+   evas_object_show(lbl);
+	
+	list = elm_list_add(tb);
+	evas_object_size_hint_weight_set(list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   elm_table_pack(tb, list, 0, 1, 1, 1);
+	
+   elm_list_select_mode_set(list, ELM_OBJECT_SELECT_MODE_ALWAYS);
+	
+   elm_scroller_content_min_limit(list, 1, 1);
+	
+   it = elm_list_item_append(list, "General", NULL, NULL,
+                             _config_show_general, tb);
+   elm_list_item_selected_set(it, 1);
+	
+   it = elm_list_item_append(list, "Popup", NULL, NULL,
+                             _config_show_popup, tb);
+	
+   it = elm_list_item_append(list, "Advanced", NULL, NULL,
+                             _config_show_advanced, tb);
+	
+   it = elm_list_item_append(list, "Calendar", NULL, NULL,
+                             _config_show_calendar, tb);
+	
+   it = elm_list_item_append(list, "Data Management", NULL, NULL,
+                             _config_show_data, tb);
+	
+	it = elm_list_item_append(list, "Help", NULL, NULL,
+                             _config_show_help, tb);
+   elm_list_go(list);
+   evas_object_show(list);
 	
 	
-// 		   boxh = elm_box_add(box_settings);
-// 			elm_box_horizontal_set(boxh, EINA_TRUE);
-// 			E_EXPAND(boxh);/*
-// 			E_WEIGHT(check, 0, 0);*/
-// 			E_ALIGN(boxh, 0.0, 0.0);
-// 			evas_object_show(boxh);
+/// FEED FRAME ///
+	general_frame = elm_frame_add(popup_settings);
+   elm_object_text_set(general_frame, "General");
+	evas_object_size_hint_weight_set(general_frame, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(general_frame, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   elm_table_pack(tb, general_frame, 1, 1, 1, 1);
+	
+			tb_general = elm_table_add(general_frame);
+			elm_table_padding_set(tb_general, 0, 2);
+// 			evas_object_size_hint_weight_set(tb_general, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+			evas_object_size_hint_align_set(tb_general, 0, EVAS_HINT_FILL);
+			evas_object_show(tb_general);
 			
-				check_switch = elm_check_add(box_settings);
-				elm_object_text_set(check_switch, "Disable Losung/Lehrtext switch or set ");
-			   elm_check_state_set(check_switch, ci_switch);
-				E_ALIGN(check_switch, 0.0, 0.5);
-				E_WEIGHT(check_switch, EVAS_HINT_EXPAND, 0);
-				elm_box_pack_end(box_settings, check_switch);
-				evas_object_show(check_switch);
-			   evas_object_data_set(mainbox, "check_switch", check_switch);
-				
-				sl_switch_time = elm_slider_add(box_settings);
-				E_ALIGN(sl_switch_time, 0.0, 0.5);
-				elm_slider_unit_format_set(sl_switch_time, "%1.0f minutes");
-				elm_slider_indicator_format_set(sl_switch_time, "%1.0f");
-				elm_slider_span_size_set(sl_switch_time, 360);
-				elm_slider_min_max_set(sl_switch_time, 1, 120);
-				elm_object_text_set(sl_switch_time, "switch time ");
-				elm_slider_value_set(sl_switch_time, ci_switch_time);
-// 				step = _step_size_calculate(0, 9);
-// 				elm_slider_step_set(sl, step);
-// 				evas_object_size_hint_align_set(sl, EVAS_HINT_FILL, EVAS_HINT_FILL);
-// 				evas_object_size_hint_weight_set(sl, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-				
-				
-				elm_box_pack_end(box_settings, sl_switch_time);
-				evas_object_show(sl_switch_time);
-				evas_object_data_set(mainbox, "sl_switch_time", sl_switch_time);
+			check_layout = elm_check_add(popup_settings);
+			elm_object_text_set(check_layout, "Hide Text");
+			elm_check_state_set(check_layout, ci_layout);
+// 			elm_object_disabled_set(check_layout, EINA_TRUE);
+			E_ALIGN(check_layout, 0.0, 0.0);
+			E_WEIGHT(check_layout, EVAS_HINT_EXPAND, 0);
+			elm_table_pack(tb_general, check_layout, 0, 0, 2, 1);
+			evas_object_show(check_layout);
+			evas_object_data_set(tb, "check_layout", check_layout);
 			
-// 			elm_box_pack_end(box_settings, boxh);
-// 			evas_object_show(boxh);
-
-	o = elm_separator_add(box_settings);
-   elm_separator_horizontal_set(o, EINA_TRUE);
-   elm_box_pack_end(box_settings, o);
-   evas_object_show(o);
-	
-///////
-   sl_font = elm_slider_add(box_settings);
-	E_ALIGN(sl_font, 0.0, 0.5);
-	elm_slider_unit_format_set(sl_font, "%1.0f px");
-	elm_slider_indicator_format_set(sl_font, "%1.0f");
-	elm_slider_value_set(sl_font, ci_font_size);
-	elm_slider_span_size_set(sl_font, 360);
-	elm_slider_min_max_set(sl_font, 8, 50);
-	elm_object_text_set(sl_font, "Font Size    ");
-	elm_slider_value_set(sl_font, ci_font_size);
-// 				step = _step_size_calculate(0, 9);
-// 				elm_slider_step_set(sl_font, 50.0);
-   elm_box_pack_end(box_settings, sl_font);
-   evas_object_show(sl_font);
-	evas_object_data_set(mainbox, "sl_font", sl_font);
-				
-				
-	o = elm_separator_add(box_settings);
-   elm_separator_horizontal_set(o, EINA_TRUE);
-   elm_box_pack_end(box_settings, o);
-   evas_object_show(o);
-////	
-
-	check_popup = elm_check_add(box_settings);
-	elm_object_text_set(check_popup, "Disable Popup");
-   elm_check_state_set(check_popup, ci_popup);
-   E_ALIGN(check_popup, 0.0, 0.0);
- 	E_WEIGHT(check_popup, EVAS_HINT_EXPAND, 0);
-//    evas_object_smart_callback_add(check_popup, "changed", _check_changed, inst);
-	elm_box_pack_end(box_settings, check_popup);
-	evas_object_show(check_popup);
-   evas_object_data_set(mainbox, "check_popup", check_popup);
-	
-	
-
-   o = elm_separator_add(box_settings);
-   elm_separator_horizontal_set(o, EINA_TRUE);
-   elm_box_pack_end(box_settings, o);
-   evas_object_show(o);
-
-   check_online = elm_check_add(box_settings);
-   elm_object_text_set(check_online, "Disable click to open on bibelserver.com");
-	
-	elm_check_state_set(check_online, ci_online);
-   E_ALIGN(check_online, 0.0, 0.0);
-//    E_WEIGHT(check, EVAS_HINT_EXPAND, 0);
-   elm_box_pack_end(box_settings, check_online);
-   evas_object_show(check_online);
-   evas_object_data_set(mainbox, "check_online", check_online);
-
-// 	o = elm_separator_add(box);
-//    elm_separator_horizontal_set(o, EINA_TRUE);
-//    elm_box_pack_end(box, o);
-//    evas_object_show(o);
-
-	
-		   boxh = elm_box_add(box_settings);
+			check_online = elm_check_add(popup_settings);
+			elm_object_text_set(check_online, "Disable click to open on bibelserver.com");
+			elm_check_state_set(check_online, ci_online);
+			E_ALIGN(check_online, 0.0, 0.0);
+			elm_table_pack(tb_general, check_online, 0, 1, 2, 1);
+			evas_object_show(check_online);
+			evas_object_data_set(tb, "check_online", check_online);
+			
+		   boxh = elm_box_add(popup_settings);
 			elm_box_horizontal_set(boxh, EINA_TRUE);
-			E_EXPAND(boxh);/*
-			E_WEIGHT(check, 0, 0);*/
+			E_EXPAND(boxh);
 			E_ALIGN(boxh, 0.0, 0.0);
 			evas_object_show(boxh);
 			
 				lbl = elm_label_add(boxh);
-				elm_object_text_set(lbl, "<custom align=left>Bibelübersetzung<br>auf bibelserver.com</custom>");
+				elm_object_text_set(lbl, "<custom align=left>Bibelübersetzung </custom>");
 // 				E_ALIGN(lbl, 0.0, 0.5);
 				elm_box_pack_end(boxh, lbl);
 				evas_object_show(lbl);
 				
 				hoversel = elm_hoversel_add(boxh);
 				elm_hoversel_auto_update_set(hoversel, EINA_TRUE);
-				elm_hoversel_hover_parent_set(hoversel, popup);
+				elm_hoversel_hover_parent_set(hoversel, popup_settings);
 				if(!strcmp(ci_translation, "LUT"))
 					elm_object_text_set(hoversel, "Luther 2017 Deutsch AT, NT");
 				else if(!strcmp(ci_translation, "ELB"))
@@ -598,41 +721,146 @@ _settings(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 				
 				elm_box_pack_end(boxh, hoversel);
 				evas_object_show(hoversel);
-				evas_object_data_set(mainbox, "hoversel", hoversel);
+				evas_object_data_set(tb, "hoversel", hoversel);
 			
-			elm_box_pack_end(box_settings, boxh);
+			elm_table_pack(tb_general, boxh, 1, 1, 2, 1);
 			evas_object_show(boxh);
-
+				
+			o = elm_separator_add(popup_settings);
+			elm_separator_horizontal_set(o, EINA_TRUE);
+			elm_table_pack(tb_general, o, 0, 2, 2, 1);
+			evas_object_show(o);
 			
+			check_switch = elm_check_add(popup_settings);
+			elm_object_text_set(check_switch, "Disable Losung/Lehrtext switch or set ");
+			elm_check_state_set(check_switch, ci_switch);
+			E_ALIGN(check_switch, 0.0, 0.5);
+			E_WEIGHT(check_switch, EVAS_HINT_EXPAND, 0);
+			elm_table_pack(tb_general, check_switch, 0, 3, 2, 1);
+			evas_object_data_set(tb, "check_switch", check_switch);
+			evas_object_show(check_switch);
+				
+			sl_switch_time = elm_slider_add(popup_settings);
+			E_ALIGN(sl_switch_time, 0.0, 0.5);
+			elm_slider_unit_format_set(sl_switch_time, "%1.0f minutes");
+			elm_slider_indicator_format_set(sl_switch_time, "%1.0f");
+			elm_slider_span_size_set(sl_switch_time, 360);
+			elm_slider_min_max_set(sl_switch_time, 1, 120);
+			elm_object_text_set(sl_switch_time, "switch time ");
+			elm_slider_value_set(sl_switch_time, ci_switch_time);
+			elm_table_pack(tb_general, sl_switch_time, 0, 4, 2, 1);
+			evas_object_data_set(tb, "sl_switch_time", sl_switch_time);
+			evas_object_show(sl_switch_time);		
+			
+			o = elm_separator_add(popup_settings);
+			elm_separator_horizontal_set(o, EINA_TRUE);
+			elm_table_pack(tb_general, o, 0, 6, 2, 1);
+			evas_object_show(o);
+				
+			sl_font = elm_slider_add(popup_settings);
+			E_ALIGN(sl_font, 0.0, 0.5);
+			elm_slider_unit_format_set(sl_font, "%1.0f px");
+			elm_slider_indicator_format_set(sl_font, "%1.0f");
+			elm_slider_value_set(sl_font, ci_font_size);
+			elm_slider_span_size_set(sl_font, 360);
+			elm_slider_min_max_set(sl_font, 8, 50);
+			elm_object_text_set(sl_font, "Font Size    ");
+			elm_slider_value_set(sl_font, ci_font_size);
+			// 				step = _step_size_calculate(0, 9);
+			// 				elm_slider_step_set(sl_font, 50.0);
+			evas_object_data_set(tb, "sl_font", sl_font);
+			elm_table_pack(tb_general, sl_font, 0, 5, 2, 1);
+			evas_object_show(sl_font);
 
+   elm_object_content_set(general_frame, tb_general);
+	evas_object_data_set(tb, "general_frame", general_frame);
+/// FEED FRAME END ///
 
-
-
-   elm_object_content_set(fr, box_settings);
-   elm_box_pack_end(mainbox, fr);
-
-	////////////////////////////////////////////////////////7
-   fr1 = elm_frame_add(mainbox);
-   elm_object_text_set(fr1, "History");
-   E_EXPAND(fr1);
-   E_FILL(fr1);
-   evas_object_show(fr1);
-   elm_box_pack_end(mainbox, fr1);
+/// POPUP FRAME ///
+	popup_frame = elm_frame_add(popup_settings);
+   elm_object_text_set(popup_frame, "Popup");
+	evas_object_size_hint_weight_set(popup_frame, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(popup_frame, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   elm_table_pack(tb, popup_frame, 1, 1, 1, 1);
 	
-   box_history = elm_box_add(fr1);
-   elm_box_horizontal_set(box_history, EINA_FALSE);
-   E_EXPAND(box_history);
-   evas_object_show(box_history);
-	
-	o = elm_separator_add(box_history);
-   elm_separator_horizontal_set(o, EINA_TRUE);
-   elm_box_pack_end(box_history, o);
-   evas_object_show(o);
-	
+			tb_popup = elm_table_add(popup_settings);
+			evas_object_size_hint_weight_set(tb_popup, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+			evas_object_size_hint_align_set(tb_popup, EVAS_HINT_FILL, 0);
+			evas_object_show(tb_popup);
+			
+			check_popup = elm_check_add(popup_settings);
+			elm_object_text_set(check_popup, "Disable Popup");
+			elm_check_state_set(check_popup, ci_popup);
+			E_ALIGN(check_popup, 0.0, 0.0);
+			E_WEIGHT(check_popup, EVAS_HINT_EXPAND, 0);
+			elm_table_pack(tb_popup, check_popup, 0, 3, 1, 1);
+			evas_object_show(check_popup);
+			evas_object_data_set(tb, "check_popup", check_popup);
 
+		
+		elm_object_content_set(popup_frame, tb_popup);
+		evas_object_data_set(tb, "popup_frame", popup_frame);
+	/// POPUP FRAME END ///
+		
+	/// ADVANCED FRAME ///
+	advanced_frame = elm_frame_add(popup_settings);
+	elm_object_text_set(advanced_frame, "Color");
+	evas_object_size_hint_weight_set(advanced_frame, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(advanced_frame, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	elm_table_pack(tb, advanced_frame, 1, 1, 1, 1);
 	
+			tb_advanced = elm_table_add(popup_settings);
+			evas_object_size_hint_weight_set(tb_advanced, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+			evas_object_size_hint_align_set(tb_advanced, EVAS_HINT_FILL, 0);
+			evas_object_show(tb_advanced);
+
+			cs = elm_colorselector_add(popup_settings);
+			evas_object_size_hint_weight_set(cs, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+			evas_object_size_hint_align_set(cs, EVAS_HINT_FILL, EVAS_HINT_FILL);
+				
+			elm_colorselector_mode_set(cs, ELM_COLORSELECTOR_BOTH);
+			elm_colorselector_palette_name_set(cs, "tageslosung");
+			elm_colorselector_palette_color_add(cs, 253, 232, 82, 255);
+			elm_colorselector_palette_color_add(cs, 255, 186, 0, 255);
+			elm_colorselector_palette_color_add(cs, 223, 147, 37, 255);
+			elm_colorselector_palette_color_add(cs, 238, 119, 99, 255);
+			elm_colorselector_palette_color_add(cs, 164, 182, 166, 255);
+			elm_colorselector_palette_color_add(cs, 146, 175, 29, 255);
+			elm_colorselector_palette_color_add(cs, 41, 68, 59, 255);
+			elm_colorselector_palette_color_add(cs, 0, 109, 128, 255);
+			elm_colorselector_palette_color_add(cs, 11, 54, 71, 255);
+			elm_colorselector_palette_color_add(cs, 41, 46, 68, 255);
+			elm_colorselector_palette_color_add(cs, 116, 13, 14, 255);
+			elm_colorselector_palette_color_add(cs, 101, 33, 44, 255);
+			elm_colorselector_palette_color_add(cs, 132, 50, 118, 255);
+			elm_colorselector_palette_color_add(cs, 68, 40, 55, 255);
+			elm_colorselector_palette_color_add(cs, 63, 37, 60, 255);
+			elm_colorselector_palette_color_add(cs, 115, 87, 63, 255);
+			elm_colorselector_palette_color_add(cs, 66, 70, 73, 255);
+			elm_colorselector_palette_color_add(cs, 255, 255, 255, 255);
+			elm_colorselector_palette_color_add(cs, 0, 0, 0, 255);
+			evas_object_data_set(tb, "cs", cs);
+			elm_table_pack(tb_advanced, cs, 0, 0, 1, 1);
+			evas_object_show(cs);
+
+		
+   elm_object_content_set(advanced_frame, tb_advanced);
+	evas_object_data_set(tb, "advanced_frame", advanced_frame);
+/// ADVANCED FRAME END ///
 	
-		   boxh = elm_box_add(box_history);
+/// CALENDAR FRAME ///
+	calendar_frame = elm_frame_add(popup_settings);
+   elm_object_text_set(calendar_frame, "Calendar");
+	evas_object_size_hint_weight_set(calendar_frame, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(calendar_frame, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   elm_table_pack(tb, calendar_frame, 1, 1, 1, 1);
+	
+			tb_calendar = elm_table_add(popup_settings);
+			evas_object_show(tb_calendar);
+			
+			
+	
+		   boxh = elm_box_add(popup_settings);
 			elm_box_horizontal_set(boxh, EINA_TRUE);
 // 			E_EXPAND(boxh);
 // 			E_WEIGHT(check, 0, 0);
@@ -645,7 +873,7 @@ _settings(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 				evas_object_size_hint_weight_set(cal, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 				elm_box_pack_end(boxh, cal);
 
-// 				time_t the_time = (SEC_PER_YEAR * 41) + (SEC_PER_DAY * 9); /* Set date to DEC 31, 2010 */
+// 				time_t the_time = (SEC_PER_YEAR * 41) + (SEC_PER_DAY * 9); // Set date to DEC 31, 2010 
 // 				elm_calendar_selected_time_set(cal, gmtime(&the_time));
 				elm_calendar_min_max_year_set(cal, 2018, 2018);
 			
@@ -657,9 +885,6 @@ _settings(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 						E_EXPAND(boxv);
 						E_WEIGHT(boxv, 0, 0);
 						E_ALIGN(boxv, 0.5, 0.5);
-// 						evas_object_size_hint_max_set()
-						
-// 						evas_object_size_hint_aspect_set(boxv, EVAS_ASPECT_CONTROL_BOTH, 1,1);
 						evas_object_show(boxv);
 				
 						lbl1 = elm_label_add(boxv);
@@ -706,114 +931,146 @@ _settings(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 				evas_object_smart_callback_add(lbl2_1, "clicked", open_bibelserver_config, lehrtextvers);
 				
 			
-			elm_box_pack_end(box_history, boxh);
+				elm_table_pack(tb_calendar, boxh, 0, 0, 1, 1);
 			evas_object_show(boxh);
-	
-	
-			
-   elm_object_content_set(fr1, box_history);
-   elm_box_pack_end(mainbox, fr1);
-	
-	////////////////////////////////////////////////////////7
-   fr2 = elm_frame_add(mainbox);
-   elm_object_text_set(fr2, "Usage");
-   E_EXPAND(fr2);
-   E_FILL(fr2);
-//    evas_object_size_hint_align_set(fr2, 0.5, 0.5);
-   evas_object_show(fr2);
-   elm_box_pack_end(mainbox, fr2);
-	
-   box_usage = elm_box_add(fr2);
-   elm_box_horizontal_set(box_usage, EINA_FALSE);
-   E_EXPAND(box_usage);
-   E_FILL(box_usage);
-   evas_object_show(box_usage);
-	
-	
-   lbl = elm_label_add(box_usage);
-   elm_object_text_set(lbl, "<custom align=left>- click on the cross, to open the shown text on bibelserver.com<br>"
-									"- click on text to open the popup<br>"
-									"- mouse wheel on text to switch Tageslosung/Lehrtext<br>"
-									"- alt+right click for settings<br>"
-									"- closing the settings panel will save the settings</custom>");
-   E_FILL(lbl);
-   E_EXPAND(lbl);
-   evas_object_size_hint_align_set(lbl, 0.5, 0.5);
-   elm_box_pack_end(box_usage, lbl);
-   evas_object_show(lbl);	
-	
 
+	
+   elm_object_content_set(calendar_frame, tb_calendar );
+	evas_object_data_set(tb, "calendar_frame", calendar_frame);
+/// ADVANCED FRAME END ///
+	
+	
+	
+/// DATA FRAME ///
+	data_frame = elm_frame_add(popup_settings);
+   elm_object_text_set(data_frame, "Data Management");
+	evas_object_size_hint_weight_set(data_frame, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(data_frame, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   elm_table_pack(tb, data_frame, 1, 1, 1, 1);
+	
+			tb_data = elm_table_add(popup_settings);
+			evas_object_size_hint_weight_set(tb_data, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+			evas_object_size_hint_align_set(tb_data, EVAS_HINT_FILL, EVAS_HINT_FILL);
+			evas_object_show(tb_data);
+
+			lbl = elm_label_add(popup_settings);
+			elm_object_text_set(lbl, "Here you can download the tageslosung data from <br>Evangelische Brüder-Unität – Herrnhuter Brüdergemeinde www.losungen.de.");
+// 			E_EXPAND(lbl);
+// 			E_FILL(lbl);
+			elm_table_pack(tb_data, lbl, 0, 0, 2, 1);
+			evas_object_show(lbl);
 			
-   elm_object_content_set(fr2, box_usage);
-   elm_box_pack_end(mainbox, fr2);
+// 			char year[512];
+// 			time_t t;
+// 			struct tm * ts;
+// 			t = time(NULL);
+// 			ts = localtime(&t);
+// 			printf("%d\n",ts->tm_year+1900);
+// 			snprintf(year, sizeof(year), "%d", ts->tm_year+1900);
+			
+			button = elm_button_add(popup_settings);
+			snprintf(buf, sizeof(buf), "download %s", year);
+			elm_object_text_set(button, buf);
+			evas_object_size_hint_weight_set(button, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+			evas_object_size_hint_align_set(button, EVAS_HINT_FILL, 0);
+// 			elm_object_tooltip_text_set(button, "download losung data for year 2018");
+			elm_table_pack(tb_data, button, 0, 1, 1, 1);
+			evas_object_show(button);
+			
+			button1 = elm_button_add(popup_settings);
+			snprintf(buf, sizeof(buf), "download %s", nextyear);
+			elm_object_text_set(button1, buf);
+			evas_object_size_hint_weight_set(button1, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+			evas_object_size_hint_align_set(button1, EVAS_HINT_FILL, 0);
+// 			elm_object_tooltip_text_set(button1, "download losung data for year 2019");
+			elm_table_pack(tb_data, button1, 1, 1, 1, 1);
+			evas_object_show(button1);
+			
+			evas_object_smart_callback_add(button, "clicked", _download_data_cb, (void*)year); 
+			evas_object_smart_callback_add(button1, "clicked", _download_data_cb, (void*)nextyear); 
+			
+
+// 			https://www.losungen.de/fileadmin/media-losungen/download/Losung_2019_XML.zip
+			
+// 			lbl = elm_label_add(popup_settings);
+// 			elm_object_text_set(lbl, "<custom align=left>- click on the cross, to open the shown text on bibelserver.com<br>"
+// 											"- mouse over the text to show the popup<br>"
+// 											"- mouse wheel on text to switch Tageslosung/Lehrtext<br>"
+// 											"- right click for settings<br>"
+// 											"- closing the settings panel will save the settings</custom>");
+// 			E_FILL(lbl);
+// 			E_EXPAND(lbl);
+// 			evas_object_size_hint_align_set(lbl, 0.5, 0.5);
+// 			elm_table_pack(tb_data, lbl, 0, 1, 1, 1);
+// 			evas_object_show(lbl);
 	
 	
 	
-	
-/////////////////
-	////////////////////////////////////////////////////////7
-   fr3 = elm_frame_add(mainbox);
-   elm_object_text_set(fr3, "Copyright");
-   E_EXPAND(fr3);
-   E_FILL(fr3);
-//    evas_object_size_hint_align_set(fr3, 0.5, 0.5);
-   evas_object_show(fr3);
-   elm_box_pack_end(mainbox, fr3);
-	
-   box_copyright = elm_box_add(fr3);
-   elm_box_horizontal_set(box_usage, EINA_FALSE);
-   E_EXPAND(box_copyright);
-   evas_object_show(box_copyright);
+   elm_object_content_set(data_frame, tb_data );
+	evas_object_data_set(tb, "data_frame", data_frame);	
+		
+/// DATA FRAME END///
 	
 	
-   lbl = elm_label_add(box_copyright);
-   
-   elm_object_text_set(lbl, "Rechte der Texte:<br>Evangelische Brüder-Unität – Herrnhuter Brüdergemeinde<br>Weitere Informationen finden Sie auf www.losungen.de.");
-//    E_ALIGN(lbl, 0.0, 0.0);
-   E_EXPAND(lbl);
-   E_FILL(lbl);
-   elm_box_pack_end(box_copyright, lbl);
-   evas_object_show(lbl);	
+/// HELP FRAME ///
+	help_frame = elm_frame_add(popup_settings);
+   elm_object_text_set(help_frame, "Help");
+	evas_object_size_hint_weight_set(help_frame, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(help_frame, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   elm_table_pack(tb, help_frame, 1, 1, 1, 1);
 	
-   elm_object_content_set(fr3, box_copyright);
-   elm_box_pack_end(mainbox, fr3);
+			tb_help = elm_table_add(popup_settings);
+			evas_object_size_hint_weight_set(tb_help, 0, 0);
+			evas_object_size_hint_align_set(tb_help, 0, 0);
+			evas_object_show(tb_help);
+
+			lbl = elm_label_add(popup_settings);
+			elm_object_text_set(lbl, "Rechte der Texte:<br>Evangelische Brüder-Unität – Herrnhuter Brüdergemeinde<br>Weitere Informationen finden Sie auf www.losungen.de.");
+			E_EXPAND(lbl);
+			E_FILL(lbl);
+			elm_table_pack(tb_help, lbl, 0, 0, 1, 1);
+			evas_object_show(lbl);
+			
+			lbl = elm_label_add(popup_settings);
+			elm_object_text_set(lbl, "<custom align=left>- click on the cross, to open the shown text on bibelserver.com<br>"
+											"- mouse over the text to show the popup<br>"
+											"- mouse wheel on text to switch Tageslosung/Lehrtext<br>"
+											"- right click for settings<br>"
+											"- closing the settings panel will save the settings</custom>");
+			E_FILL(lbl);
+			E_EXPAND(lbl);
+			evas_object_size_hint_align_set(lbl, 0.5, 0.5);
+			elm_table_pack(tb_help, lbl, 0, 1, 1, 1);
+			evas_object_show(lbl);
 	
-	if(ci_switch == 1)
-		_check_switch_changed(sl_switch_time, check_switch, NULL);
 	
-	if(ci_online == 1)
-		_check_bibelserver_changed(hoversel, check_online, NULL);
 	
-	printf("orient_helper:%s\n", orient_helper);
+   elm_object_content_set(help_frame, tb_help );
+	evas_object_data_set(tb, "help_frame", help_frame);	
+		
+/// HELP FRAME END///
 	
-	if(orient_helper != NULL)
-	{
-	   if(strcmp(orient_helper, "right") == 0) 
-	   {
-	      elm_object_disabled_set(sl_switch_time, EINA_TRUE);
-	      elm_object_disabled_set(check_switch, EINA_TRUE);
-	      elm_object_disabled_set(check_online, EINA_TRUE);
-		   elm_object_disabled_set(sl_font, EINA_TRUE);
-	   }
-	}
+	evas_object_data_set(tb, "win", win);
+   evas_object_data_set(tb, "ly", ly);
 	
-   evas_object_smart_callback_add(check_online, "changed", _check_bibelserver_changed, hoversel);
+   elm_object_content_set(popup_settings, tb);
+	_config_show_general(tb, NULL, NULL);
+	
+	evas_object_smart_callback_add(cs, "changed", _colorselector_changed_cb, tb);
+
+	evas_object_event_callback_add(popup_settings, EVAS_CALLBACK_MOUSE_OUT, _config_save, tb);
+	evas_object_event_callback_add(popup_settings, EVAS_CALLBACK_HIDE, _popup_del, NULL);
    evas_object_smart_callback_add(check_switch, "changed", _check_switch_changed, sl_switch_time);
-   evas_object_smart_callback_add(check_layout, "changed", _check_layout_changed, mainbox);
-   evas_object_smart_callback_add(sl_font, "changed", _sl_font_changed, mainbox);
-   evas_object_smart_callback_add(sl_font, "changed", _sl_font_changed_value, ly);
-//    evas_object_smart_callback_add(tg_theme, "changed", _tg_changed_cb, ic);
-//    evas_object_smart_callback_add(tg_theme, "changed", _config_save, mainbox);
-//    evas_object_smart_callback_add(tg_theme, "changed", _sl_font_changed, ly);
-	evas_object_smart_callback_add(cs, "changed", _colorselector_changed_cb, mainbox);
+   evas_object_smart_callback_add(check_layout, "changed", _check_layout_changed, tb);
 	
-   evas_object_data_set(mainbox, "win", win);
-   evas_object_data_set(mainbox, "ly", ly);
 	
-   elm_object_content_set(popup, mainbox);
+   evas_object_smart_callback_add(sl_font, "changed", _sl_font_changed, tb);
 	
-	evas_object_event_callback_add(popup, EVAS_CALLBACK_MOUSE_OUT, _config_save, mainbox);
-	evas_object_event_callback_add(popup, EVAS_CALLBACK_HIDE, _popup_del, NULL);
-   evas_object_show(popup);
+   evas_object_show(popup_settings);
+	
+	
+	
+			if(ci_switch == 1)
+		_check_switch_changed(sl_switch_time, check_switch, NULL);
 }
 
