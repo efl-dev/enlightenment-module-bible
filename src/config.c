@@ -446,8 +446,8 @@ completion_cb(void *data, const char *file, int status)
 		Ecore_Exe *exe;
 		char buf[4096];
 
-		snprintf(buf, sizeof(buf), "cd /home/simon/.config/tageslosung && unzip /home/simon/.config/tageslosung/Losung_%s_XML.zip", (char*)year_data);
-// 		snprintf(buf, sizeof(buf), "cd /home/simon/.config/tageslosung && unzip /home/simon/.config/tageslosung/Losung_2018_XML.zip  && tr '\n\r' '\n' <'Losungen Free 2018.xml' >losungen.xml");
+		snprintf(buf, sizeof(buf), "cd /home/simon/.config/tageslosung && unzip /home/simon/.config/tageslosung/Losung_%s_XML.zip && sed -i 's/\r//g' 'Losungen Free %s.xml'", (char*)year_data, (char*)year_data);
+// 		snprintf(buf, sizeof(buf), "cd /home/simon/.config/tageslosung && unzip /home/simon/.config/tageslosung/Losung_2018_XML.zip  && sed -i 's/\r//g' 'Losungen Free 2018.xml'");
 		exe = ecore_exe_run(buf, NULL);
 		if (exe > 0)
 		{
@@ -875,7 +875,7 @@ _settings(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 
 // 				time_t the_time = (SEC_PER_YEAR * 41) + (SEC_PER_DAY * 9); // Set date to DEC 31, 2010 
 // 				elm_calendar_selected_time_set(cal, gmtime(&the_time));
-				elm_calendar_min_max_year_set(cal, 2018, 2018);
+				elm_calendar_min_max_year_set(cal, atoi(year), atoi(nextyear));
 			
 				evas_object_show(cal);
 

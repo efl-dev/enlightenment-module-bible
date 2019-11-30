@@ -843,21 +843,24 @@ int elm_main(int argc, char *argv[])
 // 	evas_object_resize(win, 300, 30);
    evas_object_show(win);
 	elm_layout_file_set(ly, buf, "tageslosung2");
-   edje_object_signal_callback_add(ly, "online", "online", open_bibelserver, win);
-   edje_object_signal_callback_add(ly, "settings", "settings", _settings_2, win);
-   edje_object_signal_callback_add(ly, "show_popup", "show_popup", show_popup, win);
-   edje_object_signal_callback_add(ly, "delete_popup", "delete_popup", delete_popup_edje, win);
-	edje_object_signal_callback_add(ly, "mouse_in_online_go", "mouse_in_online_go", _mouse_in_online, NULL);
-   edje_object_signal_callback_add(ly, "mouse_out_online_go", "mouse_out_online_go", _mouse_out_online, NULL);
-   edje_object_signal_callback_add(ly, "switch_wheel", "switch_wheel", _set_text_wheel, ly);
+   elm_layout_signal_callback_add(ly, "online", "online", open_bibelserver, win);
+//    elm_layout_signal_callback_add(ly, "settings", "settings", _settings_2, win);
+   elm_layout_signal_callback_add(ly, "show_popup", "show_popup", show_popup, win);
+   elm_layout_signal_callback_add(ly, "delete_popup", "delete_popup", delete_popup_edje, win);
+	elm_layout_signal_callback_add(ly, "mouse_in_online_go", "mouse_in_online_go", _mouse_in_online, NULL);
+   elm_layout_signal_callback_add(ly, "mouse_out_online_go", "mouse_out_online_go", _mouse_out_online, NULL);
+   elm_layout_signal_callback_add(ly, "switch_wheel", "switch_wheel", _set_text_wheel, ly);
 	
 	Evas_Object *edje_obj = elm_layout_edje_get(ly);
 	
 	evas_object_smart_callback_add(win, "gadget_site_orient", orient_change, ly);
    evas_object_smart_callback_add(win, "gadget_site_anchor", anchor_change, ly);
-   evas_object_smart_callback_add(win, "gadget_configure", _settings_1, edje_obj);
+//    evas_object_smart_callback_add(win, "gadget_configure", _settings_1, edje_obj);
 //    evas_object_smart_callback_add(win, "gadget_removed", _delete_id, NULL);
 	ecore_event_handler_add(ECORE_EVENT_SIGNAL_USER, _gadget_exit, NULL);
+   
+   
+   evas_object_smart_callback_add(win, "gadget_configure", _settings_2, win);
 		
 	_get_date();
 	
