@@ -366,12 +366,12 @@ collections {
             source: "klick";
             action: SIGNAL_EMIT "delete_popup" "delete_popup";
          }
-         program {
-            name: "click_popup";
-            signal: "mouse,down,3";
-            source: "klick";
-            action: SIGNAL_EMIT "settings" "settings";
-         }
+//          program {
+//             name: "click_popup";
+//             signal: "mouse,down,3";
+//             source: "klick";
+//             action: SIGNAL_EMIT "settings" "settings";
+//          }
          program {
             name: "mouse_in_online";
             signal: "mouse,in";
@@ -436,20 +436,20 @@ collections {
 							set_int(color_losung, 1);
 						}
 			}
-        program {
-            name       : "go_white";
-            signal     : "white";
-            source     : "*";
-            action     : STATE_SET "white" 0.0;
-            target     : "tageslosung";
-         }
-         program {
-            name       : "go_black";
-            signal     : "black";
-            source     : "*";
-            action     : STATE_SET "black" 0.0;
-            target     : "tageslosung";
-         }
+//         program {
+//             name       : "go_white";
+//             signal     : "white";
+//             source     : "*";
+//             action     : STATE_SET "white" 0.0;
+//             target     : "tageslosung";
+//          }
+//          program {
+//             name       : "go_black";
+//             signal     : "black";
+//             source     : "*";
+//             action     : STATE_SET "black" 0.0;
+//             target     : "tageslosung";
+//          }
          program {
             name       : "go_active_losung";
             signal     : "active_losung";
@@ -743,12 +743,12 @@ collections {
             source: "klick1";
             action: SIGNAL_EMIT "delete_popup" "delete_popup";
          }
-         program {
-            name: "click_popup";
-            signal: "mouse,down,1";
-            source: "klick1";
-            action: SIGNAL_EMIT "settings" "settings";
-         }
+//          program {
+//             name: "click_popup";
+//             signal: "mouse,down,1";
+//             source: "klick1";
+//             action: SIGNAL_EMIT "settings" "settings";
+//          }
         program {
             name       : "go_white";
             signal     : "white";

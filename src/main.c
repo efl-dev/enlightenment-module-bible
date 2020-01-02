@@ -436,7 +436,8 @@ show_popup(void *data, Evas_Object *obj EINA_UNUSED, const char *emission EINA_U
    snprintf(buffer, sizeof(buffer), "%s<br>%s", losungstext, losungsvers);
    snprintf(buffer1, sizeof(buffer1), "%s<br>%s", lehrtext, lehrtextvers);
 	
-   popup = elm_win_add(win, "Popup",  ELM_WIN_POPUP_MENU);
+    popup = elm_win_add(win, "Popup",  ELM_WIN_POPUP_MENU);
+
    elm_win_alpha_set(popup, 1);
 	
    box = elm_box_add(popup);
@@ -846,7 +847,7 @@ int elm_main(int argc, char *argv[])
    elm_layout_signal_callback_add(ly, "online", "online", open_bibelserver, win);
 //    elm_layout_signal_callback_add(ly, "settings", "settings", _settings_2, win);
    elm_layout_signal_callback_add(ly, "show_popup", "show_popup", show_popup, win);
-   elm_layout_signal_callback_add(ly, "delete_popup", "delete_popup", delete_popup_edje, win);
+//    elm_layout_signal_callback_add(ly, "delete_popup", "delete_popup", delete_popup_edje, win);
 	elm_layout_signal_callback_add(ly, "mouse_in_online_go", "mouse_in_online_go", _mouse_in_online, NULL);
    elm_layout_signal_callback_add(ly, "mouse_out_online_go", "mouse_out_online_go", _mouse_out_online, NULL);
    elm_layout_signal_callback_add(ly, "switch_wheel", "switch_wheel", _set_text_wheel, ly);
