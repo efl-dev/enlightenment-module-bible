@@ -363,7 +363,7 @@ open_bibelserver_config(void *data, Evas_Object *obj EINA_UNUSED, void *event_in
 	snprintf(buf, sizeof(buf), "http://www.bibleserver.com/text/%s/%s", ci_translation, vers);
 	
    evas_object_smart_callback_call(win, "gadget_open_uri", buf);
-	printf("ONLINE CONFIG: %s\n", buf);
+// 	printf("ONLINE CONFIG: %s\n", buf);
 
 }
 
@@ -380,11 +380,13 @@ open_bibelserver(void *data, Evas_Object *obj, const char *emission EINA_UNUSED,
 	{
 		stringReplace("<Losungsvers>", "", losungsvers_new);
 		stringReplace("</Losungsvers>", "", losungsvers_new);
-		remove_space(losungsvers_new);
+		stringReplace(" ", "", losungsvers_new);
+// 		remove_space(losungsvers_new); // FUNKTION TUT NICHT RICHTIG
 		
 		stringReplace("<Lehrtextvers>", "", lehrtextvers_new);
 		stringReplace("</Lehrtextvers>", "", lehrtextvers_new);
-		remove_space(lehrtextvers_new);
+		stringReplace(" ", "", lehrtextvers_new);
+// 		remove_space(lehrtextvers_new); // FUNKTION TUT NICHT RICHTIG
       
 		if(!strcmp(edje_object_part_state_get(obj, "lehrtext", NULL), "default"))
 		   snprintf(buf, sizeof(buf), "http://www.bibleserver.com/text/%s/%s", ci_translation, lehrtextvers_new);
