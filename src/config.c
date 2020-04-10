@@ -216,34 +216,17 @@ _check_layout_changed(void *data EINA_UNUSED, Evas_Object *obj, void *event_info
 	snprintf(buf1, sizeof(buf1), "%s/themes/tageslosung.edj", PACKAGE_DATA_DIR);
    
 	if(elm_check_state_get(obj))
-   {		
-//       evas_object_size_hint_aspect_set(win, EVAS_ASPECT_CONTROL_BOTH, 1, 1);
+   {
 		elm_layout_file_set(ly, buf1, "tageslosung2_small");
-		printf("check if\n");
+//          _toogle_all_timer(0);
    }else
-	{		
-//       evas_object_size_hint_aspect_set(win, EVAS_ASPECT_CONTROL_BOTH, 10, 1);
-		elm_layout_file_set(ly, buf1, "tageslosung2");
-		printf("check else\n");
+	{
+         _xml_parse(ly);
+//          _toogle_all_timer(1);
 	}
-	
+
 	set_color();
 }
-
-/*
-static void
-_check_bibelserver_changed(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
-{
-	Evas_Object *hoversel = data;
-   if(!elm_check_state_get(obj))
-   {		
-	   elm_object_disabled_set(hoversel, EINA_FALSE);
-   }else
-	{		
-	 elm_object_disabled_set(hoversel, EINA_TRUE);
-	}
-}*/
-
 
 static void
 _hoversel_selected_cb(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
@@ -258,7 +241,6 @@ _popup_del(void *data EINA_UNUSED, Evas *e EINA_UNUSED, Evas_Object *obj, void *
    evas_object_del(obj);
 }
 
-
 void
 _settings_1(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
@@ -268,7 +250,6 @@ _settings_1(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 	_settings(win, ly, NULL);
 }
 
-
 void
 _settings_2(void *data, Evas_Object *obj, void *event_info)
 {
@@ -277,7 +258,6 @@ _settings_2(void *data, Evas_Object *obj, void *event_info)
 	
 	_settings(win, ly, NULL);
 }
-
 
 static void
 _config_show_general(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
@@ -1023,7 +1003,7 @@ _settings(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 			
 			lbl = elm_label_add(popup_settings);
 			elm_object_text_set(lbl, "<custom align=left>- click on the cross, to open the shown text on bibelserver.com<br>"
-											"- mouse over the text to show the popup<br>"
+											"- click into the text area to open the popup<br>"
 											"- mouse wheel on text to switch Tageslosung/Lehrtext<br>"
 											"- right click for settings<br>"
 											"- closing the settings panel will save the settings</custom>");

@@ -87,9 +87,6 @@ _my_conf_descriptor_init(void)
 
 //////////////////////////////// EET /////////////////////////////////
 
-
-
-
 void
 _read_eet()
 {
@@ -115,11 +112,6 @@ _read_eet()
     my_conf = eet_data_read(ef, _my_conf_descriptor, MY_CONF_FILE_ENTRY);
         
     configlist =  my_conf->configlist_eet;
-//     dcolor_r = my_conf->dcolor_r;
-//     dcolor_g = my_conf->dcolor_g;
-//     dcolor_b = my_conf->dcolor_b;
-//     dcolor_a = my_conf->dcolor_a;
-//     tcolor_default = my_conf->tcolor_default;
   
     eet_close(ef);
     eet_shutdown();
@@ -219,8 +211,6 @@ update_anchor_orient(void *data, E_Gadget_Site_Orient orient, E_Gadget_Site_Anch
 				Evas_Object *edje_obj = elm_layout_edje_get(ly);
             snprintf(buf, sizeof(buf), "%s/themes/tageslosung.edj", PACKAGE_DATA_DIR);
 				elm_layout_file_set(edje_obj, buf, "tageslosung2_small");
-			   edje_object_signal_emit(edje_obj, "black", "");
-	         edje_object_signal_emit(edje_obj, "text_white", "gadget");
             s = "left";
 				orient_helper = s;
 		  }
@@ -260,12 +250,8 @@ update_anchor_orient(void *data, E_Gadget_Site_Orient orient, E_Gadget_Site_Anch
         else
 		  {
 	         evas_object_size_hint_aspect_set(obj, EVAS_ASPECT_CONTROL_BOTH, 1, 1);
-				
-// 				Evas_Object *edje_obj = elm_layout_edje_get(data);
-            snprintf(buf, sizeof(buf), "%s/themes/tageslosung.edj", PACKAGE_DATA_DIR);
+				snprintf(buf, sizeof(buf), "%s/themes/tageslosung.edj", PACKAGE_DATA_DIR);
 				elm_layout_file_set(ly, buf, "tageslosung2_small");
-			   edje_object_signal_emit(ly, "white", "");
-	         edje_object_signal_emit(ly, "text_white", "gadget");
 				s = "right";
 				orient_helper = s;
 			}
@@ -286,17 +272,13 @@ update_anchor_orient(void *data, E_Gadget_Site_Orient orient, E_Gadget_Site_Anch
              break;
            default: break;
           }
-     }
-//    snprintf(buf, sizeof(buf), "e,state,orientation,%s", s);
-// 	printf("ORIENTATION: %s\n", buf);
-	
+     }	
 }
 
 
 static 
 Eina_Bool _gadget_exit(void *data, int type, void *event_data) 
-{
-	
+{	
 	Eina_List *l;
 	Config_Item *list_data;
 	Ecore_Event_Signal_User *user = event_data;
@@ -322,7 +304,6 @@ Eina_Bool _gadget_exit(void *data, int type, void *event_data)
 static void
 orient_change(void *data, Evas_Object *obj, void *event_info)
 {
-// 	Evas_Object *ly = data;
    gorient = (uintptr_t)event_info;
    update_anchor_orient(data, gorient, ganchor, obj);
 }
@@ -330,7 +311,6 @@ orient_change(void *data, Evas_Object *obj, void *event_info)
 static void
 anchor_change(void *data, Evas_Object *obj, void *event_info)
 {
-// 	Evas_Object *ly = data;
    ganchor = (uintptr_t)event_info;
    update_anchor_orient(data, gorient, ganchor, obj);
 }
@@ -348,7 +328,6 @@ _mouse_out_online(void *data, Evas_Object *obj EINA_UNUSED, const char *emission
 	   edje_object_signal_emit(ly, "mouse_out_online_go", "e");
 }
 
-
 void
 open_bibelserver_config(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
@@ -361,15 +340,11 @@ open_bibelserver_config(void *data, Evas_Object *obj EINA_UNUSED, void *event_in
 	snprintf(buf, sizeof(buf), "http://www.bibleserver.com/text/%s/%s", ci_translation, vers);
 	
    evas_object_smart_callback_call(win, "gadget_open_uri", buf);
-// 	printf("ONLINE CONFIG: %s\n", buf);
-
 }
-
 
 static void
 open_bibelserver(void *data, Evas_Object *obj, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
-//    Evas_Object *win = data;
 	char buf[PATH_MAX];
 	char *losungsvers_new = losungsvers;
 	char *lehrtextvers_new = lehrtextvers;
@@ -410,7 +385,7 @@ show_popup(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *emi
         popup = NULL;
         return;
      }
-   
+
 	if(ci_popup == 1)
 		return;
 	
@@ -449,7 +424,6 @@ show_popup(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *emi
 void
 _set_text_wheel(void *data, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
-	
 	Evas_Object *edje_obj = elm_layout_edje_get(data);
 	_set_text(edje_obj, NULL, NULL, NULL);
 }
@@ -468,18 +442,14 @@ _set_text(void *data, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UN
 		printf("activ Lehrtext\n");
 	   edje_object_signal_emit(data, "passive_losung", "");
    }
-	printf("set text\n");
 }
-
 
 static Eina_Bool
 _set_text_timer(void *data)
 {
 	_set_text(data, NULL, NULL, NULL);
-printf("TIMER SUCCESS\n");
    return ECORE_CALLBACK_RENEW;
 }
-
 
 static Eina_Bool
 _day_change(void *data)
@@ -622,7 +592,6 @@ _xml_parse(void *data)
    snprintf(buf2, sizeof(buf2), "%s/tageslosung/Losungen Free %s.xml", efreet_config_home_get(), year);
 	
    FILE *fp;
-   // Datei oeffnen
    fp = fopen(buf2, "r");
 
    if(fp == NULL) 
@@ -731,8 +700,6 @@ _xml_parse(void *data)
 					edje_object_part_text_set(edje_obj, "lehrtextvers", buffer);
 				}
         }
-
-		
 	}
 
 	fclose(fp);
@@ -740,6 +707,33 @@ _xml_parse(void *data)
    return 1;
 }
 
+// void
+// _toogle_all_timer(int state)
+// {
+//    if (state == 1)
+//    {
+//       printf("TOOGLE 1\n");
+//       daytimer = ecore_timer_add(60, _day_change, NULL);
+// 
+//       if(!ci_switch_time || ci_switch_time == 0)
+//          timer = ecore_timer_add(5 * 60, _set_text_timer, ly);
+//       else
+//          timer = ecore_timer_add(ci_switch_time * 60, _set_text_timer, ly);
+//    }else
+//    {
+//       printf("TOOGLE 0\n");
+//       if (timer)
+//       {
+//          ecore_timer_del(timer);
+//          timer = NULL;
+//       }
+//       if (daytimer)
+//       {
+//          ecore_timer_del(daytimer);
+//          daytimer = NULL;
+//       }
+//    }
+// }
 
 void
 set_color()
@@ -773,8 +767,6 @@ set_color()
 int elm_main(int argc, char *argv[])
 {
    char buf[PATH_MAX];
-//    char buf2[PATH_MAX];
-//    int gadget = 0;
    char buf1[16];
 	
 	Config_Item *config;
@@ -785,13 +777,15 @@ int elm_main(int argc, char *argv[])
  
    if (getenv("E_GADGET_ID"))
      {
-//         gadget = 1;
         snprintf(buf1, sizeof(buf1), "%s", getenv("E_GADGET_ID"));
         id_num = atoi(buf1);
      }
 
     _my_conf_descriptor_init();
    _read_eet();
+   
+	_config_load(ly);							// load config data from eet to tmp vars
+   
    //new window
    win = elm_win_add(NULL, "tageslosung", ELM_WIN_BASIC);
    elm_win_title_set(win, "Tageslosung");
@@ -813,7 +807,12 @@ int elm_main(int argc, char *argv[])
    evas_object_data_set(win, "config", config);
 // 	evas_object_resize(win, 300, 30);
    evas_object_show(win);
-	elm_layout_file_set(ly, buf, "tageslosung2");
+
+   if(ci_layout == 1)
+      elm_layout_file_set(ly, buf, "tageslosung2_small");
+   else
+      elm_layout_file_set(ly, buf, "tageslosung2");
+
    elm_layout_signal_callback_add(ly, "online", "online", open_bibelserver, win);
 //    elm_layout_signal_callback_add(ly, "settings", "settings", _settings_2, win);
    elm_layout_signal_callback_add(ly, "show_popup", "show_popup", show_popup, NULL);
@@ -834,18 +833,18 @@ int elm_main(int argc, char *argv[])
 	if(eina_list_count(losungen) == 0)
 	_xml_parse(ly);
 
-	_config_load(ly);							// load config data from eet to tmp vars
 
 	set_color();
 	
 	_set_text(ly, NULL, NULL, NULL);
+   daytimer = ecore_timer_add(60, _day_change, NULL);
 
-	daytimer = ecore_timer_add(60, _day_change, NULL);
+   if(!ci_switch_time || ci_switch_time == 0)
+      timer = ecore_timer_add(5 * 60, _set_text_timer, ly);
+   else
+      timer = ecore_timer_add(ci_switch_time * 60, _set_text_timer, ly);
 
-	if(!ci_switch_time || ci_switch_time == 0)
-		timer = ecore_timer_add(5 * 60, _set_text_timer, ly);
-	else
-		timer = ecore_timer_add(ci_switch_time * 60, _set_text_timer, ly);
+//    _toogle_all_timer(1);
 	
 	_save_eet();
 	

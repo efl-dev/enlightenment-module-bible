@@ -28,6 +28,7 @@ int           _xml_parse(void *data);
 void          set_color();
 void          _read_eet();
 void          _save_eet();
+void          _toogle_all_timer(int state);
 
 unsigned int  createHEX(int r, int g, int b, int a);
 

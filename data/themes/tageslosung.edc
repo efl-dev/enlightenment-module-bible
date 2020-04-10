@@ -405,21 +405,6 @@ collections {
       name : "tageslosung2_small";
       min  : 10 10;
 
-      script {
-         public farbe;
-         public farbe_neu;
-         public color_losung;
-         public color_losung1;
-         public tsize;
-
-         public message(Msg_Type:type, id, ...) {
-            if ((type == MSG_FLOAT_SET) && (id == 1)) {
-               new Float:time;
-               time = getfarg(2);
-               set_float(tsize, time);
-            }
-			}
-      }
       parts {
          rect { "background";
             scale: 1;
@@ -450,6 +435,7 @@ collections {
             description {
                state             : "default" 0.0;
                color             : 255 255 255 192;
+               color_class       : "colorclass";
                visible           : 1;
                aspect            : 1.0 1.0;
                aspect_preference : BOTH;
@@ -507,20 +493,6 @@ collections {
             in:     0.5 0.0;
             action: SIGNAL_EMIT "show_popup" "show_popup";
          }
-//          program {
-//             name: "mouse_out_popup";
-//             signal: "mouse,out";
-//             source: "klick1";
-//             script{
-//             stop_program(PROGRAM:"mouse_in_popup");
-//             }
-//          }
-//          program {
-//             name: "mouse_out_popup1";
-//             signal: "mouse,out";
-//             source: "klick1";
-//             action: SIGNAL_EMIT "delete_popup" "delete_popup";
-//          }
         program {
             name       : "go_white";
             signal     : "white";
