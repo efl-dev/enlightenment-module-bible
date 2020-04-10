@@ -179,30 +179,19 @@ _colorselector_changed_cb(void *data, Evas_Object *obj, void *event_info EINA_UN
 {	
 	Evas_Object *tb = data;
    Evas_Object *ic = evas_object_data_get(tb, "ic");
-   Evas_Object *ly = evas_object_data_get(tb, "ly");
 
    elm_colorselector_color_get(obj, &ci_r, &ci_g, &ci_b, &ci_a);
 	
 	evas_object_color_set(ic, ci_r, ci_g, ci_b, ci_a);
 	
-	set_color(ly);
+	set_color();
 }
-/*
-static void
-_sl_font_changed_value(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
-{
-	ci_font_size = elm_slider_value_get(obj);
-}*/
-
 
 void
-_sl_font_changed(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
+_sl_font_changed(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
-	Evas_Object *tb = data;
 	ci_font_size = elm_slider_value_get(obj);
-   Evas_Object *ly = evas_object_data_get(tb, "ly");
-	
-   set_color(ly);
+   set_color();
 }
 
 
@@ -220,10 +209,8 @@ _check_switch_changed(void *data, Evas_Object *obj, void *event_info EINA_UNUSED
 }
 
 static void
-_check_layout_changed(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
+_check_layout_changed(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
-	Evas_Object *tb = data;
-   Evas_Object *ly = evas_object_data_get(tb, "ly");
 	char buf1[4096];
 	
 	snprintf(buf1, sizeof(buf1), "%s/themes/tageslosung.edj", PACKAGE_DATA_DIR);
@@ -240,7 +227,7 @@ _check_layout_changed(void *data, Evas_Object *obj, void *event_info EINA_UNUSED
 		printf("check else\n");
 	}
 	
-	set_color(ly);
+	set_color();
 }
 
 /*
@@ -261,7 +248,6 @@ _check_bibelserver_changed(void *data, Evas_Object *obj, void *event_info EINA_U
 static void
 _hoversel_selected_cb(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
-//    char buf[PATH_MAX];
 	ci_translation = eina_stringshare_add((char*)data);
 	printf("HOVERSEL: %s\n", ci_translation);
 }
@@ -284,7 +270,7 @@ _settings_1(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 
 
 void
-_settings_2(void *data, Evas_Object *obj, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
+_settings_2(void *data, Evas_Object *obj, void *event_info)
 {
 	Evas_Object *win = data;
 	Evas_Object *ly = obj;
@@ -504,6 +490,7 @@ _download_data_cb(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 void
 _settings(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
+   printf("DAY: %i\n", current_day);
 	char buf[PATH_MAX];
 // 	double step;
 	Evas_Object *popup_settings;
@@ -817,6 +804,9 @@ _settings(void *data, Evas_Object *obj, void *event_info EINA_UNUSED)
 			cs = elm_colorselector_add(popup_settings);
 			evas_object_size_hint_weight_set(cs, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 			evas_object_size_hint_align_set(cs, EVAS_HINT_FILL, EVAS_HINT_FILL);
+         
+			evas_color_argb_premul(ci_a, &ci_r, &ci_g, &ci_b);
+			elm_colorselector_color_set(cs, ci_r, ci_g, ci_b, ci_a);
 				
 			elm_colorselector_mode_set(cs, ELM_COLORSELECTOR_BOTH);
 			elm_colorselector_palette_name_set(cs, "tageslosung");

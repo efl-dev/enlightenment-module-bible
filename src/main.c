@@ -3,7 +3,6 @@
 Evas_Object *win = NULL;
 static    Evas_Object *popup = NULL;
 Evas_Object *ly = NULL;
-// static    Evas_Object *popup;
 int       switcher = 1;
 
 char      *losungstext = NULL;
@@ -288,8 +287,8 @@ update_anchor_orient(void *data, E_Gadget_Site_Orient orient, E_Gadget_Site_Anch
            default: break;
           }
      }
-   snprintf(buf, sizeof(buf), "e,state,orientation,%s", s);
-	printf("ORIENTATION: %s\n", buf);
+//    snprintf(buf, sizeof(buf), "e,state,orientation,%s", s);
+// 	printf("ORIENTATION: %s\n", buf);
 	
 }
 
@@ -312,7 +311,6 @@ Eina_Bool _gadget_exit(void *data, int type, void *event_data)
          configlist = eina_list_remove(configlist, list_data);
 		}
    }
-   printf("DEL ID\n");
 	
 	_save_eet();
 		
@@ -371,7 +369,7 @@ open_bibelserver_config(void *data, Evas_Object *obj EINA_UNUSED, void *event_in
 static void
 open_bibelserver(void *data, Evas_Object *obj, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
-   Evas_Object *win = data;
+//    Evas_Object *win = data;
 	char buf[PATH_MAX];
 	char *losungsvers_new = losungsvers;
 	char *lehrtextvers_new = lehrtextvers;
@@ -398,53 +396,36 @@ open_bibelserver(void *data, Evas_Object *obj, const char *emission EINA_UNUSED,
 	}
 }
 
-/*
 static void
-delete_popup_evas(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
+show_popup(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
 {
-   if(popup)
-     {
-        evas_object_del(popup);
-        popup = NULL;
-        return;
-     }
-}*/
-
-
-
-static void
-delete_popup_edje(void *data, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
-{
-   if(popup)
-     {
-        evas_object_del(popup);
-        popup = NULL;
-        return;
-     }
-}
-
-
-static void
-show_popup(void *data, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
-{
-   Evas_Object *win = data;
+//    Evas_Object *win = data;
 	Evas_Object *box, *lbl;
    char buffer[PATH_MAX];
    char buffer1[PATH_MAX];
-	
+   
+   if(popup)
+     {
+        evas_object_del(popup);
+        popup = NULL;
+        return;
+     }
+   
 	if(ci_popup == 1)
 		return;
 	
    snprintf(buffer, sizeof(buffer), "%s<br>%s", losungstext, losungsvers);
    snprintf(buffer1, sizeof(buffer1), "%s<br>%s", lehrtext, lehrtextvers);
 	
-    popup = elm_win_add(win, "Popup",  ELM_WIN_POPUP_MENU);
+   popup = elm_win_add(win, "Popup",  ELM_WIN_BASIC);
+   evas_object_size_hint_weight_set(popup, 0, 0);
 
    elm_win_alpha_set(popup, 1);
 	
    box = elm_box_add(popup);
    elm_box_horizontal_set(box, EINA_FALSE);
-   elm_win_resize_object_add(popup, box);
+   evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
+   evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
    evas_object_show(box);
  
    lbl = elm_label_add(box);
@@ -460,12 +441,10 @@ show_popup(void *data, Evas_Object *obj EINA_UNUSED, const char *emission EINA_U
    elm_object_text_set(lbl, buffer1);
    elm_box_pack_end(box, lbl);
    evas_object_show(lbl);
-
-   evas_object_size_hint_align_set(box, 0.5, 0.5);
 	
+   elm_win_resize_object_add(popup, box);
    evas_object_show(popup);
 }
-
 
 void
 _set_text_wheel(void *data, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED)
@@ -497,7 +476,7 @@ static Eina_Bool
 _set_text_timer(void *data)
 {
 	_set_text(data, NULL, NULL, NULL);
-
+printf("TIMER SUCCESS\n");
    return ECORE_CALLBACK_RENEW;
 }
 
@@ -505,10 +484,18 @@ _set_text_timer(void *data)
 static Eina_Bool
 _day_change(void *data)
 {
-	_xml_parse(data);
-	_set_text(data, NULL, NULL, NULL);
+   	time_t t;
+	struct tm * ts;
+	t = time(NULL);
+	ts = localtime(&t);
 
-   return ECORE_CALLBACK_CANCEL;
+   if(current_day != (int)ts->tm_mday)
+   {
+      _xml_parse(data);
+      _set_text(data, NULL, NULL, NULL);
+      current_day = (int)ts->tm_mday;
+   }
+   return ECORE_CALLBACK_RENEW;
 }
 
 static void
@@ -523,31 +510,32 @@ _get_date()
 	snprintf(nextyear, sizeof(nextyear), "%d", ts->tm_year+1900+1);
 	
 	snprintf(today, sizeof(today), "%02d-%02d-%02d", ts->tm_year + 1900, ts->tm_mon +1 , ts->tm_mday);
+   current_day = (int)ts->tm_mday;
 	
 }
 
-static void
-_check_day(void *data)
-{
-    time_t t1, t2;
-    struct tm date2;
-
-    time( &t1); // aktuelles Datum in Sekunden 
-
-    // Konvertiere Sekunden nach struct tm 
-    date2 = *localtime( &t1);
-    // Überschreibe Tag und Monat 
-	 date2.tm_sec = 59;
-	 date2.tm_min = 59;
-    date2.tm_hour = 23;
-
-    // Konvertiere wieder von struct tm in Sekunden zurück 
-    t2 = mktime( &date2);
-	printf("Sek. bis morgen: %f", difftime(t2, t1));
-	
-	daytimer = ecore_timer_add(difftime(t2, t1), _day_change, data);
-	
-}
+// static void
+// _check_day(void *data)
+// {
+//     time_t t1, t2;
+//     struct tm date2;
+// 
+//     time( &t1); // aktuelles Datum in Sekunden 
+// 
+//     // Konvertiere Sekunden nach struct tm 
+//     date2 = *localtime( &t1);
+//     // Überschreibe Tag und Monat 
+// 	 date2.tm_sec = 59;
+// 	 date2.tm_min = 59;
+//     date2.tm_hour = 23;
+// 
+//     // Konvertiere wieder von struct tm in Sekunden zurück 
+//     t2 = mktime( &date2);
+// 	printf("Sek. bis morgen: %f", difftime(t2, t1));
+// 	
+// 	daytimer = ecore_timer_add(difftime(t2, t1), _day_change, data);
+// 	
+// }
 
 void
 delete_timer()
@@ -556,32 +544,15 @@ delete_timer()
 	{
       ecore_timer_del(timer);
 		timer = NULL;
-		printf("DELT TIMER 1\n");
 	}
 }
-
 
 void
 change_timer(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
-// 	Evas_Object *ly = data;
-   if(timer)
-	{
-      ecore_timer_del(timer);
-		timer = NULL;
-		printf("DELT TIMER 2\n");
-	}
-
 	if(ci_switch != 1)
-	{
-	   timer = ecore_timer_add(ci_switch_time * 60, _set_text_timer, data);
-		
-		printf("TIMER 2\n");
-		
-		printf("DELT TIMER Time %1.0f \n", ci_switch_time);
-	}
+		ecore_timer_interval_set(timer, ci_switch_time * 60);
 }
-
 
 void stringReplace(char *search, char *replace, char *string)
 {
@@ -771,8 +742,9 @@ _xml_parse(void *data)
 
 
 void
-set_color(Evas_Object *ly)
+set_color()
 {
+   Evas_Object *edje_obj = elm_layout_edje_get(ly);
 	edje_object_color_class_set(ly, "colorclass", /* class name   */
                                ci_r, ci_g, ci_b, ci_a,  /* Object color */
                                255, 255, 255, 255,   /* Text outline */
@@ -787,16 +759,16 @@ set_color(Evas_Object *ly)
    snprintf(buf1, sizeof(buf1), "DEFAULT='font=Sans:style=Regular color=#%06x font_size=%1.0f'",  rgba, ci_font_size-3);
    snprintf(buf2, sizeof(buf2), "DEFAULT='font=Sans:style=Regular color=#%06x font_size=%1.0f'",  rgba, ci_font_size);
 
-	edje_object_part_text_style_user_push(ly,"losungstext", buf2);
-	edje_object_part_text_style_user_push(ly,"lehrtext", buf2);
+	edje_object_part_text_style_user_push(edje_obj,"losungstext", buf2);
+	edje_object_part_text_style_user_push(edje_obj,"lehrtext", buf2);
 	
-	edje_object_part_text_style_user_push(ly,"losungsvers", buf1);
-	edje_object_part_text_style_user_push(ly,"lehrtextvers", buf1);
+	edje_object_part_text_style_user_push(edje_obj,"losungsvers", buf1);
+	edje_object_part_text_style_user_push(edje_obj,"lehrtextvers", buf1);
 	
+   edje_object_color_class_set(edje_obj, "colorclass", ci_r, ci_g, ci_b, ci_a, 0, 0, 0, 0, 0, 0, 0, 0);
 	
 		printf("BUF STYLE: %s\n", buf2);
 }
-
 
 int elm_main(int argc, char *argv[])
 {
@@ -825,10 +797,6 @@ int elm_main(int argc, char *argv[])
    elm_win_title_set(win, "Tageslosung");
    elm_win_autodel_set(win, EINA_TRUE);
    elm_win_alpha_set(win, EINA_TRUE);
-	
-	
-
-	
 
 	evas_object_size_hint_aspect_set(win, EVAS_ASPECT_CONTROL_BOTH, 10, 1);
 	
@@ -848,52 +816,31 @@ int elm_main(int argc, char *argv[])
 	elm_layout_file_set(ly, buf, "tageslosung2");
    elm_layout_signal_callback_add(ly, "online", "online", open_bibelserver, win);
 //    elm_layout_signal_callback_add(ly, "settings", "settings", _settings_2, win);
-   elm_layout_signal_callback_add(ly, "show_popup", "show_popup", show_popup, win);
-//    elm_layout_signal_callback_add(ly, "delete_popup", "delete_popup", delete_popup_edje, win);
+   elm_layout_signal_callback_add(ly, "show_popup", "show_popup", show_popup, NULL);
 	elm_layout_signal_callback_add(ly, "mouse_in_online_go", "mouse_in_online_go", _mouse_in_online, NULL);
    elm_layout_signal_callback_add(ly, "mouse_out_online_go", "mouse_out_online_go", _mouse_out_online, NULL);
    elm_layout_signal_callback_add(ly, "switch_wheel", "switch_wheel", _set_text_wheel, ly);
-	
-	Evas_Object *edje_obj = elm_layout_edje_get(ly);
 	
 	evas_object_smart_callback_add(win, "gadget_site_orient", orient_change, ly);
    evas_object_smart_callback_add(win, "gadget_site_anchor", anchor_change, ly);
 //    evas_object_smart_callback_add(win, "gadget_configure", _settings_1, edje_obj);
 //    evas_object_smart_callback_add(win, "gadget_removed", _delete_id, NULL);
 	ecore_event_handler_add(ECORE_EVENT_SIGNAL_USER, _gadget_exit, NULL);
-   
-   
+
    evas_object_smart_callback_add(win, "gadget_configure", _settings_2, win);
-		
+
 	_get_date();
-	
+
 	if(eina_list_count(losungen) == 0)
 	_xml_parse(ly);
-	
-	
-	_check_day(ly);
+
 	_config_load(ly);							// load config data from eet to tmp vars
-	
-// 				Evas_Object *edje_obj = elm_layout_edje_get(ly);
-	set_color(edje_obj);
+
+	set_color();
 	
 	_set_text(ly, NULL, NULL, NULL);
-/*	
-   if(ci_theme == 0)
-   {
-	   edje_object_signal_emit(ly, "white", "");
-		snprintf(buf2, sizeof(buf2), "DEFAULT='font=Sans:style=Regular color=#ffffff font_size=%1.0f'", ci_font_size);
-		edje_object_part_text_style_user_push(ly,"lehrtext", buf2);
-		edje_object_part_text_style_user_push(ly,"losungstext", buf2);
-// 		printf("1 %s\n", buf2);
-	}else
-	{
-		edje_object_signal_emit(ly, "black", "");
-		snprintf(buf2, sizeof(buf2), "DEFAULT='font=Sans:style=Regular color=#000000 font_size=%1.0f'", ci_font_size);
-		edje_object_part_text_style_user_push(ly,"lehrtext", buf2);
-		edje_object_part_text_style_user_push(ly,"losungstext", buf2);
-// 		printf("1 %s\n", buf2);
-	}*/
+
+	daytimer = ecore_timer_add(60, _day_change, NULL);
 
 	if(!ci_switch_time || ci_switch_time == 0)
 		timer = ecore_timer_add(5 * 60, _set_text_timer, ly);
@@ -910,7 +857,11 @@ int elm_main(int argc, char *argv[])
 	{
       ecore_timer_del(timer);
 		timer = NULL;
-		printf("DELT TIMER 3\n");
+	}
+   if(daytimer)
+	{
+      ecore_timer_del(daytimer);
+		daytimer = NULL;
 	}
 //         _my_conf_descriptor_shutdown();
   return 0;

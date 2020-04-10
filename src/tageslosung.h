@@ -15,7 +15,7 @@
 #define E_FILL(X)   E_ALIGN((X), EVAS_HINT_FILL, EVAS_HINT_FILL)
 
 void          _settings_1(void *data, Evas_Object *obj, void *event_info EINA_UNUSED);
-void          _settings_2(void *data, Evas_Object *obj, const char *emission EINA_UNUSED, const char *source EINA_UNUSED);
+void          _settings_2(void *data, Evas_Object *obj, void *event_info);
 void          _settings(void *data, Evas_Object *obj, void *event_info EINA_UNUSED);
 void    		  change_timer(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED);
 void          open_bibelserver_config(void *data, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED);
@@ -25,7 +25,7 @@ void          remove_space(char *src);
 void          _sl_font_changed(void *data, Evas_Object *obj, void *event_info EINA_UNUSED);
 void          _set_text(void *data, Evas_Object *obj EINA_UNUSED, const char *emission EINA_UNUSED, const char *source EINA_UNUSED);
 int           _xml_parse(void *data);
-void          set_color(Evas_Object *ly);
+void          set_color();
 void          _read_eet();
 void          _save_eet();
 
@@ -43,13 +43,14 @@ char      *translation;
 char		 year[512];
 char		 nextyear[512];
 char 		 today[512];
+int       current_day;
 
 char 		  *s;
 char      *orient_helper;
 
 
-static    Ecore_Timer *timer;
-static    Ecore_Timer *daytimer;
+Ecore_Timer *timer;
+Ecore_Timer *daytimer;
 
 int        id_num;
 
